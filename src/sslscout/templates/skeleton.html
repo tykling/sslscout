@@ -15,34 +15,48 @@
         
         <div class="navbar-collapse collapse navbar-inverse-collapse">
             <ul class="nav navbar-nav">
+                {% if user.is_authenticated %}
                 <li>
-                    <a href="/about/"><i class="fa fa-question"></i> About</a>
+                    <a href="/sites/"><i class="fa fa-list fa-lg"></i> Sites</a>
                 </li>
                 <li>
-                    <a href="https://github.com/tykling/sslscout/"><i class="fa fa-github"></i> Source Code</a>
+                    <a href="/sitegroups/"><i class="fa fa-list fa-lg"></i> Site Groups</a>
                 </li>
                 <li>
-                    <a href="https://github.com/tykling/sslscout/issues/"><i class="fa fa-github"></i> Report Issue</a>
+                    <a href="/results/"><i class="fa fa-flag fa-lg"></i> Results</a>
+                </li>
+                {% endif %}
+                <li>
+                    <a href="/about/"><i class="fa fa-question fa-lg"></i> About</a>
                 </li>
                 <li>
-                    <a href="mailto:info@sslscout.com"><i class="fa fa-envelope"></i> Contact</a>
+                    <a href="https://github.com/tykling/sslscout/"><i class="fa fa-github fa-lg"></i> Source Code</a>
+                </li>
+                <li>
+                    <a href="https://github.com/tykling/sslscout/issues/"><i class="fa fa-github fa-lg"></i> Report Issue</a>
+                </li>
+                <li>
+                    <a href="mailto:info@sslscout.com"><i class="fa fa-envelope fa-lg"></i> Contact</a>
                 </li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
                 <li>
-                    <a href="/profile/"><i class="fa fa-user"></i> {{ user }}</a>
+                    <a>Queue Length <span class="badge">{{ queuelength }}/{{ userqueuelength }}</span></a>
                 </li>
                 <li>
-                    <a href="/accounts/logout/"><i class="fa fa-power-off"></i> Log Out</a>
+                    <a href="/profile/"><i class="fa fa-user fa-lg"></i> {{ user }}</a>
+                </li>
+                <li>
+                    <a href="/accounts/logout/"><i class="fa fa-power-off fa-lg"></i> Log Out</a>
                 </li>
                 {% else %}
                 <li>
-                    <a href="/accounts/login/"><i class="fa fa-key"></i> Log in</a>
+                    <a href="/accounts/login/"><i class="fa fa-key fa-lg"></i> Log in</a>
                 </li>
                 <li>
-                    <a href="/accounts/register/"><i class="fa fa-plus"></i> Register</a>
+                    <a href="/accounts/register/"><i class="fa fa-plus fa-lg"></i> Register</a>
                 </li>
                 {% endif %}
             </ul>
