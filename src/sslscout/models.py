@@ -27,12 +27,35 @@ class Site(models.Model):
         return u'B%s - %s' % (self.id, self.create_time)
 
 
-### contains all check results
-class SiteChecks(models.Model):
-    site = models.ForeighKey(Site)
-    datetime = models.DateTimeField(auto_now_add=True)
-    result_html = models.TextField()
+### defines the different engines available
+class CheckEngine(models.Model):
+    name = models.CharField(max_length=50)
+    active = models.BooleanField()
 
-    
+
+### the check queue
+class CheckQueue(models.Model):
+    site = models.ForeignKey(Site)
+    engine = models.ForeignKey(CheckEngine)
+    finished = models.BooleanField(default=False)
+    queue_time = models.DateTimeField(auto_now_add=True)
+    start_time = models.DateTimeField(null=True)
+    finish_time = models.DateTimeField(null=True)
+    debug_html = models.TextField(null=True)
+
+
+### contains all check results
+class CheckResult(models.Model):
+    site = models.ForeignKey(Site)
+    check_queue_id = models.ForeignKey(CheckQueue)
+    check_finish_datetime = models.DateTimeField(auto_now_add=True)
+    overall_rating = models.CharField(max_length=2,null=True)
+    certificate_score = models.IntegerField(null=True)
+    protocolsupport_score = models.IntegerField(null=True)
+    keyexchange_score = models.IntegerField(null=True)
+    cipherstrength_score = models.IntegerField(null=True)
+
+
+
 ### import signals from signals.py (for profile autocreation on user creation)
 import signals
