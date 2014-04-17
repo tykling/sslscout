@@ -27,7 +27,7 @@
                             <dd>{{ form.username }}</dd>
                             <dt><label for="id_password">Password:</label>{% if form.password.errors %} <span class="error">{{ form.password.errors|join:", " }}</span>{% endif %}</dt>
                             <dd>{{ form.password }}</dd>
-                            <dt><button type="submit" value="Log in" />Log in</dt>
+                            <dt><button type="submit" class="btn btn-primary">Log in</button></dt>
                             </dl>
                         </form>
 

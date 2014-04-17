@@ -1,7 +1,7 @@
                     {% extends "skeleton.html" %}
                     
                     {% block title %}
-                    <title>Showing Profile for {{user}}</title>
+                    <title>Editing Profile for {{user}}</title>
                     {% endblock title %}
                     
                     {% block content %}
@@ -14,21 +14,38 @@
                         </ul>
                     {% endif %}
 
-                    <h2>Edit sslscout profile for {{user}}</h2>
-                    <form method="post" action="">
-                        {% csrf_token %}	
-                        <dl>
-                            <dt><label for="id_first_name">First name:</label>{% if form.first_name.errors %} <span class="error">{{ form.first_name.errors|join:", " }}</span>{% endif %}</dt>
-                            <dd>{{ form.first_name }}</dd>
+                    <form method="post" class="form-horizontal">
+                        <fieldset>
+                            <legend>Edit sslscout profile for {{user}}</legend>
+                            {% csrf_token %}	
+                            <div class="form-group">
+                                <label for="id_first_name" class="col-lg-2 control-label">First Name(s):</label> {% if form.first_name.errors %} <span class="error">{{ form.first_name.errors|join:", " }}</span>{% endif %}
+                                <div class="col-lg-10">
+                                    <input type="text" name="first_name" class="form-control" id="id_first_name" placeholder="First Name(s)">
+                                </div>
+                            </div>
 
-                            <dt><label for="id_last_name">Last name:</label>{% if form.last_name.errors %} <span class="error">{{ form.last_name.errors|join:", " }}</span>{% endif %}</dt>
-                            <dd>{{ form.last_name }}</dd>
+                            <div class="form-group">
+                                <label for="id_last_name" class="col-lg-2 control-label">Last Name:</label> {% if form.last_name.errors %} <span class="error">{{ form.last_name.errors|join:", " }}</span>{% endif %}
+                                <div class="col-lg-10">
+                                    <input type="text" name="last_name" class="form-control" id="id_last_name" placeholder="Last Name">
+                                </div>
+                            </div>
 
-                            <dt><label for="id_country">Country:</label>{% if form.country.errors %} <span class="error">{{ form.country.errors|join:", " }}</span>{% endif %}</dt>
-                            <dd>{{ form.country }}</dd>
+                            <div class="form-group">
+                                <label for="id_country" class="col-lg-2 control-label">Country:</label> {% if form.country.errors %} <span class="error">{{ form.country.errors|join:", " }}</span>{% endif %}
+                                <div class="col-lg-10">
+                                    <input type="text" name="country" class="form-control" id="id_country" placeholder="Country">
+                                </div>
+                            </div>
 
-                            <dt><button type="submit" value="Update Profile">Update Profile</button></dt>
-                        </dl>
+                            <div class="form-group">
+                                <div class="col-lg-10 col-lg-offset-2">
+                                    <a href="/profile/" class="btn btn-default">Cancel</a>
+                                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                                </div>
+                            </div>
+                        </fieldset>
                     </form>
                     <p>
                         <a href="/accounts/password/change/">Change password</a> 
