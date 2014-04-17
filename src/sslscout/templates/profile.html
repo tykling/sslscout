@@ -4,18 +4,46 @@
                     <title>Profile</title>
                     {% endblock title %}
                     
-                    {% block content %}
-                    <h2>{{ user.username }} profile on sslscout</h2>
-                    
-                    <table border="0">
-                        <tr><td>Site Limit:</td><td>{{ profile.site_limit }}</td></tr>
-                        <tr><td>First name(s):</td><td>{{ profile.first_name }}</td></tr>
-                        <tr><td>Last name:</td><td>{{ profile.last_name }}</td></tr>
-                        <tr><td>Country:</td><td>{{ profile.country }}</td></tr>
-                    </table>
-                    <p>
-                        <a href="/profile/edit/">Edit profile</a><br>
-                        <a href="/accounts/password_change/">Change password</a><br>
-                        <a href="/accounts/logout/">Log out</a> 
-                    </td></tr>
+                    {% block content %}                    
+                    <form method="post" action="/profile/edit/" class="form-horizontal">
+                        <fieldset>
+                            <legend>sslscout profile for {{user}}</legend>
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="id_site_limit" class="col-lg-2 control-label">Site Limit (readonly):</label>
+                                <div class="col-lg-10">
+                                    <input value="{{ form.site_limit.value }}" type="text" readonly="on" name="site_limit" class="form-control" id="id_site_limit">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_first_name" class="col-lg-2 control-label">First Name(s):</label> {% if form.first_name.errors %} <span class="error">{{ form.first_name.errors|join:", " }}</span>{% endif %}
+                                <div class="col-lg-10">
+                                    <input value="{{ form.first_name.value|default_if_none:"" }}" type="text" readonly="on" name="first_name" class="form-control" id="id_first_name" placeholder="First Name(s)">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_last_name" class="col-lg-2 control-label">Last Name:</label> {% if form.last_name.errors %} <span class="error">{{ form.last_name.errors|join:", " }}</span>{% endif %}
+                                <div class="col-lg-10">
+                                    <input value="{{ form.last_name.value|default_if_none:"" }}" type="text" readonly="on" name="last_name" class="form-control" id="id_last_name" placeholder="Last Name">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_country" class="col-lg-2 control-label">Country:</label> {% if form.country.errors %} <span class="error">{{ form.country.errors|join:", " }}</span>{% endif %}
+                                <div class="col-lg-10">
+                                    <input value="{{ form.country.value|default_if_none:"" }}" type="text" readonly="on" name="country" class="form-control" id="id_country" placeholder="Country">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-lg-10 col-lg-offset-2">
+                                    <a href="/profile/edit/" class="btn btn-default">Edit Profile</button>
+                                    <a href="/accounts/password/change/" class="btn btn-default">Change password</a>
+                                    <a href="/accounts/logout/" class="btn btn-default">Log Out</a>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
                     {% endblock content %}

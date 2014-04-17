@@ -13,33 +13,57 @@
                         <h2>Already logged in as {{ request.user }}</h2>
                         <p><a href="/accounts/profile/">Go to profile</a></p>
                     {% else %}
-                        <h2>Create sslscout account</h2>
-                        {% if form.errors %}
-                            <ul id="messagelist">
-                                <p>The following form errors were found:</p>
-                                {% for error in form.errors %}
-                                <li class="error">{{ error }}</li>
-                                {% endfor %}
-                            </ul>                    
-                        {% endif %}
+                        <form method="post" action="" class="form-horizontal">
+                            <fieldset>
+                                <legend>Create Account</legend>
 
-                        <form method="post">
-                            {% csrf_token %}
-                            <dl>
-                                <dt><label for="id_username">Username:</label>{% if form.username.errors %} <span class="error">{{ form.username.errors|join:", " }}</span>{% endif %}</dt>
-                                <dd>{{ form.username }}</dd>
+                                {% if form.errors %}
+                                    <ul id="messagelist">
+                                        <p>The following form errors were found:</p>
+                                        {% for error in form.errors %}
+                                        <li class="error">{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>                    
+                                {% endif %}
 
-                                <dt><label for="id_email">Email address:</label>{% if form.email.errors %} <span class="error">{{ form.email.errors|join:", " }}</span>{% endif %}</dt>
-                                <dd>{{ form.email }}</dd>
 
-                                <dt><label for="id_password1">Password:</label>{% if form.password1.errors %} <span class="error">{{ form.password2.errors|join:", " }}</span>{% endif %}</dt>
-                                <dd>{{ form.password1 }}</dd>
+                                {% csrf_token %}
+                                <p>Please fill out this form to create an sslscout account:</p>
 
-                                <dt><label for="id_password2">Password:</label>{% if form.password2.errors %} <span class="error">{{ form.password2.errors|join:", " }}</span>{% endif %}</dt>
-                                <dd>{{ form.password2 }}</dd>
+                                <div class="form-group">
+                                    <label for="id_username" class="col-lg-2 control-label">Username:</label>
+                                    <div class="col-lg-10">
+                                        <input value="{{ form.username.value }}" type="text" name="username" class="form-control" id="id_username">
+                                    </div>
+                                </div>
 
-                                <dt><button type="submit" class="btn btn-primary">Create Account</button></dt>
-                            </dl>
+                                <div class="form-group">
+                                    <label for="id_email" class="col-lg-2 control-label">E-Mail:</label>
+                                    <div class="col-lg-10">
+                                        <input value="{{ form.email.value }}" type="email" name="email" class="form-control" id="id_email">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="id_new_password1" class="col-lg-2 control-label">New Password:</label> {% if form.new_password1.errors %} <span class="error">{{ form.new_password1.errors|join:", " }}</span>{% endif %}
+                                    <div class="col-lg-10">
+                                        <input type="password" name="new_password1" class="form-control" id="id_new_password1" placeholder="New Password">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="id_new_password2" class="col-lg-2 control-label">New Password (again):</label> {% if form.new_password2.errors %} <span class="error">{{ form.new_password2.errors|join:", " }}</span>{% endif %}
+                                    <div class="col-lg-10">
+                                        <input type="password" name="new_password2" class="form-control" id="id_new_password2" placeholder="New Password (again)">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-lg-10 col-lg-offset-2">
+                                        <button type="submit" class="btn btn-primary">Create Account</button>
+                                    </div>
+                                </div>
+                            </fieldset>
                         </form>
                     {% endif %}
                     {% endblock content %}
