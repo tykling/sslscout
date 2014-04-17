@@ -3,7 +3,7 @@ from django.conf import settings
 from django.http import HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotAllowed, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django import forms
-from sslscout.models import Profile
+from sslscout.models import Profile, CheckQueue
 from sslscout.forms import ProfileForm
 import datetime, hashlib, pytz, requests, uuid
 from time import gmtime, strftime

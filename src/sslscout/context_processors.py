@@ -1,11 +1,17 @@
+from sslscout.models import CheckQueue, Site, SiteGroup
 from django.conf import settings
 
 def queuelength(request):
-    queueitems = CheckQueue.objects.filter(finished=False)
-    userqueue = CheckQueue.objects.filter(user=request.user)
+    queuelength = CheckQueue.objects.filter(finished=False).count()
+    userqueuelength = CheckQueue.objects.filter(site__sitegroup__user=request.user).count()
+    sitegroupcount = SiteGroup.objects.filter(user=request.user).count()
+    sitecount = Site.objects.filter(sitegroup__user=request.user).count()
+
     return {
-        'queuelength': queueitems.len(),
-        'userqueuelength': userqueue.len()
+        'queuelength': queuelength,
+        'userqueuelength': userqueuelength,
+        'sitegroupcount': sitegroupcount,
+        'sitecount': sitecount,        
     }
 
 def site(request):
