@@ -44,10 +44,10 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
                 <li>
-                    <a>Sites/Sitegroups <span class="badge">{{ sitecount }}/{{ sitegroupcount }}</span></a>
+                    <a>Sites/Groups: <span class="badge">{{ sitecount }}/{{ sitegroupcount }}</span></a>
                 </li>
                 <li>
-                    <a>Global/User Queue Length <span class="badge">{{ queuelength }}/{{ userqueuelength }}</span></a>
+                    <a>Global/User Queue:  <span class="badge">{{ queuelength }}/{{ userqueuelength }}</span></a>
                 </li>
                 <li>
                     <a href="/profile/"><i class="fa fa-user fa-lg"></i> {{ user }}</a>
