@@ -27,10 +27,14 @@ Install
 -------
 If you want to run your own instance of sslscout the source code is freely 
 available under a BSD license. sslscout is a django application originally 
-written for django 1.6. It also requires the following packages:
+written for django 1.6. 
+
+It also requires the following packages:
 - django-registration
 - django-uuidfield
-- django-profile packages
+- django-profile
+- pytz
+- python-requests
 
 To try it out just download the source and run it using djangos own 
 webserver. To run it in production I use 

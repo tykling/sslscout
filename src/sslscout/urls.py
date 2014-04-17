@@ -6,7 +6,7 @@ from django.views.generic.base import TemplateView
 from registration.forms import RegistrationFormUniqueEmail
 from registration.backends.default.views import ActivationView, RegistrationView
 
-from bncom.forms import ProfileForm
+from sslscout.forms import ProfileForm
 
 admin.autodiscover()
 
@@ -15,7 +15,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     ### static pages
-    url(r'^/$', 'sslscout.views.staticpage',{'page': 'frontpage.html'}),
+    url(r'^$', 'sslscout.views.staticpage',{'page': 'frontpage.html'}),
 
     ### auth and pw stuff
     url(r'^accounts/login/$', login, name='login'),
