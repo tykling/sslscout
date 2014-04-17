@@ -1,0 +1,21 @@
+                    {% extends "skeleton.html" %}
+                    
+                    {% block title %}
+                    <title>Profile</title>
+                    {% endblock title %}
+                    
+                    {% block content %}
+                    <h2>{{ user.username }} profile on sslscout</h2>
+                    
+                    <table border="0">
+                        <tr><td>Site Limit:</td><td>{{ profile.site_limit }}</td></tr>
+                        <tr><td>First name(s):</td><td>{{ profile.first_name }}</td></tr>
+                        <tr><td>Last name:</td><td>{{ profile.last_name }}</td></tr>
+                        <tr><td>Country:</td><td>{{ profile.country }}</td></tr>
+                    </table>
+                    <p>
+                        <a href="/profile/edit/">Edit profile</a><br>
+                        <a href="/accounts/password_change/">Change password</a><br>
+                        <a href="/accounts/logout/">Log out</a> 
+                    </td></tr>
+                    {% endblock content %}

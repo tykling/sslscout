@@ -1,0 +1,36 @@
+                    {% extends "skeleton.html" %}
+                    
+                    {% block title %}
+                    <title>{% trans 'Profile | Bitcoin Nordic' %}</title>
+                    {% endblock title %}
+                    
+                    {% block content %}
+                    {% if form.errors %}
+                        <ul id="messagelist">
+                            <p>The following errors were found:</p>
+                            {% for error in form.errors %}
+                            <li class="error">{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    <h2>Edit sslscout profile for {{user}}</h2>
+                    <form method="post" action="">
+                        {% csrf_token %}	
+                        <dl>
+                            <dt><label for="id_first_name">First name:</label>{% if form.first_name.errors %} <span class="error">{{ form.first_name.errors|join:", " }}</span>{% endif %}</dt>
+                            <dd>{{ form.first_name }}</dd>
+
+                            <dt><label for="id_last_name">Last name:</label>{% if form.last_name.errors %} <span class="error">{{ form.last_name.errors|join:", " }}</span>{% endif %}</dt>
+                            <dd>{{ form.last_name }}</dd>
+
+                            <dt><label for="id_country">Country:</label>{% if form.country.errors %} <span class="error">{{ form.country.errors|join:", " }}</span>{% endif %}</dt>
+                            <dd>{{ form.country }}</dd>
+
+                            <dt><button type="submit" value="Update Profile">Update Profile</button></dt>
+                        </dl>
+                    </form>
+                    <p>
+                        <a href="/accounts/password/change/">Change password</a> 
+                    </p>                    
+                    {% endblock content %}

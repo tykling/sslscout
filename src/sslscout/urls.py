@@ -1,5 +1,13 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.contrib.auth.views import login, logout, password_reset, password_reset_done, password_reset_complete, password_reset_confirm, password_change, password_change_done
+from django.views.generic import RedirectView
+from django.views.generic.base import TemplateView
+from registration.forms import RegistrationFormUniqueEmail
+from registration.backends.default.views import ActivationView, RegistrationView
+
+from bncom.forms import ProfileForm
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
