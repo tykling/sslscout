@@ -34,14 +34,14 @@
                                     <div class="form-group">
                                         <label for="id_username" class="col-lg-2 control-label">Username:</label>
                                         <div class="col-lg-10">
-                                            <input value="{{ form.username.value }}" type="text" name="username" class="form-control" id="id_username">
+                                            <input value="{{ form.username.value|default_if_none:"" }}" type="text" name="username" class="form-control" id="id_username">
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="id_email" class="col-lg-2 control-label">E-Mail:</label>
                                         <div class="col-lg-10">
-                                            <input value="{{ form.email.value }}" type="email" name="email" class="form-control" id="id_email">
+                                            <input value="{{ form.email.value|default_if_none:"" }}" type="email" name="email" class="form-control" id="id_email">
                                         </div>
                                     </div>
 
