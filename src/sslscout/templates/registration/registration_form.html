@@ -1,20 +1,18 @@
                     {% extends "skeleton.html" %}
                     
+                    {% block title %}
                     {% if request.user %}
-                        {% block title %}
                         <title>Already logged in</title>
-                        {% endblock title %}
-                        
-                        {% block content %}
-                            <h2>Already logged in as {{ request.user }}</h2>
-                            <p><a href="/accounts/profile/">Go to profile</a></p>
-                        {% endblock content %}
                     {% else %}
-                        {% block title %}
                         <title>Create Account</title>
-                        {% endblock title %}
+                    {% endif %}
+                    {% endblock title %}
                         
-                        {% block content %}
+                    {% block content %}
+                    {% if request.user %}
+                        <h2>Already logged in as {{ request.user }}</h2>
+                        <p><a href="/accounts/profile/">Go to profile</a></p>
+                    {% else %}
                         <h2>Create sslscout account</h2>
                         {% if form.errors %}
                             <ul id="messagelist">
@@ -43,6 +41,5 @@
                                 <dt><button type="submit" value="Create Account">Create Account</button></dt>
                             </dl>
                         </form>
-                        {% endblock content %}
                     {% endif %}
-                    
+                    {% endblock content %}

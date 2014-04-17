@@ -1,21 +1,19 @@
                     {% extends "skeleton.html" %}
                     
+                    {% block title %}
                     {% if request.user %}
-                        {% block title %}
                         <title>Already logged in</title>
-                        {% endblock title %}
-                        
-                        {% block content %}
-                            <h2>Already logged in as {{ request.user }}</h2>
-                            <p><a href="/accounts/profile/">Go to profile</a></p>
-                        {% endblock content %}
                     {% else %}
-                        {% block title %}
                         <title>Account Registration Complete</title>
-                        {% endblock title %}
-                        
-                        {% block content %}
+                    {% endif %}
+                    {% endblock title %}
+                    
+                    {% block content %}
+                    {% if request.user %}
+                        <h2>Already logged in as {{ request.user }}</h2>
+                        <p><a href="/accounts/profile/">Go to profile</a></p>
+                    {% else %}
                         <h1>Account Registration Complete</h1>
                         <p>Your sslscout account has been registered but it has to be activated before you can log in to the site. Please check your email for further instructions.</p>
-                        {% endblock content %}
                     {% endif %}
+                    {% endblock content %}
