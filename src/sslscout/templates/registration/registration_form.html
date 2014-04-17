@@ -9,61 +9,63 @@
                     {% endblock title %}
                         
                     {% block content %}
-                    {% if user.is_authenticated %}
-                        <h2>Already logged in as {{ request.user }}</h2>
-                        <p><a href="/accounts/profile/">Go to profile</a></p>
-                    {% else %}
-                        <form method="post" action="" class="form-horizontal">
-                            <fieldset>
-                                <legend>Create Account</legend>
+                    <div class="col-lg-8">
+                        {% if user.is_authenticated %}
+                            <h2>Already logged in as {{ request.user }}</h2>
+                            <p><a href="/accounts/profile/">Go to profile</a></p>
+                        {% else %}
+                            <form method="post" action="" class="form-horizontal">
+                                <fieldset>
+                                    <legend>Create Account</legend>
 
-                                {% if form.errors %}
-                                    <ul id="messagelist">
-                                        <p>The following form errors were found:</p>
-                                        {% for error in form.errors %}
-                                        <li class="error">{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>                    
-                                {% endif %}
+                                    {% if form.errors %}
+                                        <ul id="messagelist">
+                                            <p>The following form errors were found:</p>
+                                            {% for error in form.errors %}
+                                            <li class="error">{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>                    
+                                    {% endif %}
 
 
-                                {% csrf_token %}
-                                <p>Please fill out this form to create an sslscout account:</p>
+                                    {% csrf_token %}
+                                    <p>Please fill out this form to create an sslscout account:</p>
 
-                                <div class="form-group">
-                                    <label for="id_username" class="col-lg-2 control-label">Username:</label>
-                                    <div class="col-lg-10">
-                                        <input value="{{ form.username.value }}" type="text" name="username" class="form-control" id="id_username">
+                                    <div class="form-group">
+                                        <label for="id_username" class="col-lg-2 control-label">Username:</label>
+                                        <div class="col-lg-10">
+                                            <input value="{{ form.username.value }}" type="text" name="username" class="form-control" id="id_username">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="id_email" class="col-lg-2 control-label">E-Mail:</label>
-                                    <div class="col-lg-10">
-                                        <input value="{{ form.email.value }}" type="email" name="email" class="form-control" id="id_email">
+                                    <div class="form-group">
+                                        <label for="id_email" class="col-lg-2 control-label">E-Mail:</label>
+                                        <div class="col-lg-10">
+                                            <input value="{{ form.email.value }}" type="email" name="email" class="form-control" id="id_email">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="id_new_password1" class="col-lg-2 control-label">New Password:</label> {% if form.new_password1.errors %} <span class="error">{{ form.new_password1.errors|join:", " }}</span>{% endif %}
-                                    <div class="col-lg-10">
-                                        <input type="password" name="new_password1" class="form-control" id="id_new_password1" placeholder="New Password">
+                                    <div class="form-group">
+                                        <label for="id_new_password1" class="col-lg-2 control-label">New Password:</label> {% if form.new_password1.errors %} <span class="error">{{ form.new_password1.errors|join:", " }}</span>{% endif %}
+                                        <div class="col-lg-10">
+                                            <input type="password" name="new_password1" class="form-control" id="id_new_password1" placeholder="New Password">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="id_new_password2" class="col-lg-2 control-label">New Password (again):</label> {% if form.new_password2.errors %} <span class="error">{{ form.new_password2.errors|join:", " }}</span>{% endif %}
-                                    <div class="col-lg-10">
-                                        <input type="password" name="new_password2" class="form-control" id="id_new_password2" placeholder="New Password (again)">
+                                    <div class="form-group">
+                                        <label for="id_new_password2" class="col-lg-2 control-label">New Password (again):</label> {% if form.new_password2.errors %} <span class="error">{{ form.new_password2.errors|join:", " }}</span>{% endif %}
+                                        <div class="col-lg-10">
+                                            <input type="password" name="new_password2" class="form-control" id="id_new_password2" placeholder="New Password (again)">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <div class="col-lg-10 col-lg-offset-2">
-                                        <button type="submit" class="btn btn-primary">Create Account</button>
+                                    <div class="form-group">
+                                        <div class="col-lg-10 col-lg-offset-2">
+                                            <button type="submit" class="btn btn-primary">Create Account</button>
+                                        </div>
                                     </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    {% endif %}
+                                </fieldset>
+                            </form>
+                        {% endif %}
+                    </div>
                     {% endblock content %}

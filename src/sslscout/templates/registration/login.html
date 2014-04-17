@@ -10,40 +10,42 @@
                     {% endblock title %}
                     
                     {% block content %}
-                    {% if user.is_authenticated %}
-                        <h2>Already logged in as {{ request.user }}</h2>
-                        <p><a href="/accounts/profile/">Go to profile</a></p>
-                    {% else %}
-                        {% if form.errors %}
-                        <p class="error">Incorrect username or password - <a href="/accounts/password_reset/">reset</a> ?</p>
+                    <div class="col-lg-8">
+                        {% if user.is_authenticated %}
+                            <h2>Already logged in as {{ request.user }}</h2>
+                            <p><a href="/accounts/profile/">Go to profile</a></p>
+                        {% else %}
+                            {% if form.errors %}
+                            <p class="error">Incorrect username or password - <a href="/accounts/password_reset/">reset</a> ?</p>
+                            {% endif %}
+
+                            <form method="post" action="{% if next %}?next={{ next }}{% endif %}" class="form-horizontal">
+                                <fieldset>
+                                    <legend>sslscout login</legend>
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="id_username" class="col-lg-2 control-label">Username:</label> {% if form.username.errors %} <span class="error">{{ form.username.errors|join:", " }}</span>{% endif %}
+                                        <div class="col-lg-10">
+                                            <input value="{{ form.username.value|default_if_none:"" }}" type="text" name="username" class="form-control" id="id_username" placeholder="Username">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="id_password" class="col-lg-2 control-label">Password:</label> {% if form.password.errors %} <span class="error">{{ form.password.errors|join:", " }}</span>{% endif %}
+                                        <div class="col-lg-10">
+                                            <input type="password" name="password" class="form-control" id="id_password" placeholder="Password">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-lg-10 col-lg-offset-2">
+                                            <button type="submit" class="btn btn-primary">Log In</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                            <p>If you don't have an account you can <a href="/accounts/register/">create one here</a>.</p>
                         {% endif %}
-
-                        <form method="post" action="{% if next %}?next={{ next }}{% endif %}" class="form-horizontal">
-                            <fieldset>
-                                <legend>sslscout login</legend>
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <label for="id_username" class="col-lg-2 control-label">Username:</label> {% if form.username.errors %} <span class="error">{{ form.username.errors|join:", " }}</span>{% endif %}
-                                    <div class="col-lg-10">
-                                        <input value="{{ form.username.value|default_if_none:"" }}" type="text" name="username" class="form-control" id="id_username" placeholder="Username">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="id_password" class="col-lg-2 control-label">Password:</label> {% if form.password.errors %} <span class="error">{{ form.password.errors|join:", " }}</span>{% endif %}
-                                    <div class="col-lg-10">
-                                        <input type="password" name="password" class="form-control" id="id_password" placeholder="Password">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-lg-10 col-lg-offset-2">
-                                        <button type="submit" class="btn btn-primary">Log In</button>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
-
-                        <p>If you don't have an account you can <a href="/accounts/register/">create one here</a>.</p>
-                    {% endif %}
+                    </div>
                     {% endblock content %}
