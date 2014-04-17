@@ -1,0 +1,10 @@
+You signed up for an sslscout account at using this email 
+address. Please activate your account by pressing the link below:
+
+https://{{ site }}/accounts/activate/{{ activation_key }}/
+
+If you didn't request this, sorry for the noise, please ignore this email.
+
+Best regards,
+
+sslscout

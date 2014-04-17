@@ -1,0 +1,14 @@
+                    {% extends "skeleton.html" %}
+                    
+                    {% block title %}
+                    <title>activate sslscout account</title>
+                    {% endblock title %}
+                    
+                    {% block content %}
+                    <h2>Activate sslscout Account</h2>
+                    {% if account %}
+                    <p>Your sslscout account has been activated, you may proceed to log in <a href="/accounts/login/">here</a>.</p>
+                    {% else %}
+                    <p>Activation link invalid, account not activated.</p>
+                    {% endif %}
+                    {% endblock content %}

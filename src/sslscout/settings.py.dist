@@ -1,0 +1,118 @@
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+# Database
+# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'exampledb',
+        'USER': 'dbuser',
+        'PASSWORD': 'secret',
+        'HOST': '10.0.0.1',
+        'PORT': '',
+    }
+}
+
+# email server settings
+EMAIL_HOST='mail.example.com'
+EMAIL_PORT=587
+EMAIL_HOST_USER='sslscout@example.com'
+EMAIL_HOST_PASSWORD='secret'
+EMAIL_USE_TLS=True
+EMAIL_CC=['admin@example.com']
+EMAIL_FROM='noreply@example.com'
+
+# hostname
+ALLOWED_HOSTS = ['example.com',]
+SITE_URL = 'https://example.com'
+
+# misc settings
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
+SECRET_KEY = 'tCq8L7gzN6D0pAINLKFQUuJdMa0ybQWowynIfDMXz9ImeFVCgVAic-O-DG83690vb82MZvAob_YsJAJ2a43cIvdiaQfPfbFoRR8Y'  # replace with your own unique string
+
+# debug ? never in prod!
+DEBUG = True
+TEMPLATE_DEBUG = True
+
+
+##############################################################################
+
+AUTH_PROFILE_MODULE = "sslscout.Profile"
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages",
+    "sslscout.context_processors.site",
+)
+
+INSTALLED_APPS = (
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'registration',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'sslscout',
+    'profiles',
+)
+
+MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+ROOT_URLCONF = 'sslscout.urls'
+WSGI_APPLICATION = 'sslscout.wsgi.application'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console': {
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/1.6/topics/i18n/
+LANGUAGE_CODE = 'en-gb'
+TIME_ZONE = 'UTC'
+USE_I18N = False
+USE_L10N = False
+USE_TZ = False
+
+STATIC_URL = '/static/'
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'sslscout/templates'))
