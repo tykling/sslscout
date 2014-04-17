@@ -1,7 +1,7 @@
                     {% extends "skeleton.html" %}
                     
                     {% block title %}
-                    {% if request.user %}
+                    {% if user.is_authenticated %}
                         <title>Already logged in</title>
                     {% else %}
                         <title>activate sslscout account</title>
@@ -9,7 +9,7 @@
                     {% endblock title %}
                         
                     {% block content %}
-                    {% if request.user %}
+                    {% if user.is_authenticated %}
                         <h2>Already logged in as {{ request.user }}</h2>
                         <p><a href="/accounts/profile/">Go to profile</a></p>
                     {% else %}
