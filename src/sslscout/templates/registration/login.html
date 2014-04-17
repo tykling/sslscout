@@ -1,27 +1,37 @@
                     {% extends "skeleton.html" %}
                     
-                    {% block title %}
-                    <title>sslscout login page</title>
-                    {% endblock title %}
-                    
-                    {% block content %}
-                    <h2>sslscout login</h2>
-                    
-                    {% if form.errors %}
-                    <p class="error">Incorrect username or password - <a href="/accounts/password_reset/">reset</a> ?</p>
+                    {% if request.user %}
+                        {% block title %}
+                        <title>Already logged in</title>
+                        {% endblock title %}
+                        
+                        {% block content %}
+                            <h2>Already logged in as {{ request.user }}</h2>
+                            <p><a href="/accounts/profile/">Go to profile</a></p>
+                        {% endblock content %}
+                    {% else %}
+                        {% block title %}
+                        <title>sslscout login page</title>
+                        {% endblock title %}
+                        
+                        {% block content %}
+                        <h2>sslscout login</h2>
+                        
+                        {% if form.errors %}
+                        <p class="error">Incorrect username or password - <a href="/accounts/password_reset/">reset</a> ?</p>
+                        {% endif %}
+
+                        <form method="post" action="{% if next %}?next={{ next }}{% endif %}">
+                            {% csrf_token %}
+                            <dl>
+                            <dt><label for="id_username">Username:</label>{% if form.username.errors %} <span class="error">{{ form.username.errors|join:", " }}</span>{% endif %}</dt>
+                            <dd>{{ form.username }}</dd>
+                            <dt><label for="id_password">Password:</label>{% if form.password.errors %} <span class="error">{{ form.password.errors|join:", " }}</span>{% endif %}</dt>
+                            <dd>{{ form.password }}</dd>
+                            <dt><button type="submit" value="Log in" />Log in</dt>
+                            </dl>
+                        </form>
+
+                        <p>If you don't have an account you can <a href="/accounts/register/">create one here</a>.</p>
+                        {% endblock content %}
                     {% endif %}
-
-                    <form method="post" action="{% if next %}?next={{ next }}{% endif %}">
-                        {% csrf_token %}
-                        <dl>
-                        <dt><label for="id_username">Username:</label>{% if form.username.errors %} <span class="error">{{ form.username.errors|join:", " }}</span>{% endif %}</dt>
-                        <dd>{{ form.username }}</dd>
-                        <dt><label for="id_password">Password:</label>{% if form.password.errors %} <span class="error">{{ form.password.errors|join:", " }}</span>{% endif %}</dt>
-                        <dd>{{ form.password }}</dd>
-                        <dt><button type="submit" value="Log in" />Log in</dt>
-                        </dl>
-                    </form>
-
-                    <h2>Create sslscout account</h2>
-                    <p>If you don't have an account you can <a href="/accounts/register/">create one</a> for free.</p>
-                    {% endblock content %}

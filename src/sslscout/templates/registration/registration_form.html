@@ -1,36 +1,48 @@
                     {% extends "skeleton.html" %}
                     
-                    {% block title %}
-                    <title>Create Account</title>
-                    {% endblock title %}
-                    
-                    {% block content %}
-                    <h2>Create sslscout account</h2>
-                    {% if form.errors %}
-                        <ul id="messagelist">
-                            <p>The following form errors were found:</p>
-                            {% for error in form.errors %}
-                            <li class="error">{{ error }}</li>
-                            {% endfor %}
-                        </ul>                    
+                    {% if request.user %}
+                        {% block title %}
+                        <title>Already logged in</title>
+                        {% endblock title %}
+                        
+                        {% block content %}
+                            <h2>Already logged in as {{ request.user }}</h2>
+                            <p><a href="/accounts/profile/">Go to profile</a></p>
+                        {% endblock content %}
+                    {% else %}
+                        {% block title %}
+                        <title>Create Account</title>
+                        {% endblock title %}
+                        
+                        {% block content %}
+                        <h2>Create sslscout account</h2>
+                        {% if form.errors %}
+                            <ul id="messagelist">
+                                <p>The following form errors were found:</p>
+                                {% for error in form.errors %}
+                                <li class="error">{{ error }}</li>
+                                {% endfor %}
+                            </ul>                    
+                        {% endif %}
+
+                        <form method="post">
+                            {% csrf_token %}
+                            <dl>
+                                <dt><label for="id_username">Username:</label>{% if form.username.errors %} <span class="error">{{ form.username.errors|join:", " }}</span>{% endif %}</dt>
+                                <dd>{{ form.username }}</dd>
+
+                                <dt><label for="id_email">Email address:</label>{% if form.email.errors %} <span class="error">{{ form.email.errors|join:", " }}</span>{% endif %}</dt>
+                                <dd>{{ form.email }}</dd>
+
+                                <dt><label for="id_password1">Password:</label>{% if form.password1.errors %} <span class="error">{{ form.password2.errors|join:", " }}</span>{% endif %}</dt>
+                                <dd>{{ form.password1 }}</dd>
+
+                                <dt><label for="id_password2">Password:</label>{% if form.password2.errors %} <span class="error">{{ form.password2.errors|join:", " }}</span>{% endif %}</dt>
+                                <dd>{{ form.password2 }}</dd>
+
+                                <dt><button type="submit" value="Create Account">Create Account</button></dt>
+                            </dl>
+                        </form>
+                        {% endblock content %}
                     {% endif %}
-
-                    <form method="post">
-                        {% csrf_token %}
-                        <dl>
-                            <dt><label for="id_username">Username:</label>{% if form.username.errors %} <span class="error">{{ form.username.errors|join:", " }}</span>{% endif %}</dt>
-                            <dd>{{ form.username }}</dd>
-
-                            <dt><label for="id_email">Email address:</label>{% if form.email.errors %} <span class="error">{{ form.email.errors|join:", " }}</span>{% endif %}</dt>
-                            <dd>{{ form.email }}</dd>
-
-                            <dt><label for="id_password1">Password:</label>{% if form.password1.errors %} <span class="error">{{ form.password2.errors|join:", " }}</span>{% endif %}</dt>
-                            <dd>{{ form.password1 }}</dd>
-
-                            <dt><label for="id_password2">Password:</label>{% if form.password2.errors %} <span class="error">{{ form.password2.errors|join:", " }}</span>{% endif %}</dt>
-                            <dd>{{ form.password2 }}</dd>
-
-                            <dt><button type="submit" value="Create Account">Create Account</button></dt>
-                        </dl>
-                    </form>
-                    {% endblock content %}
+                    
