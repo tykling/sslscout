@@ -1,13 +1,15 @@
-import datetime, hashlib, pytz, requests, uuid
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.conf import settings
 from django.http import HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotAllowed, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django import forms
-from sslscout.models import Profile, SiteGroup, Site, CheckEngine, CheckQueue, CheckResult
-from sslscout.forms import ProfileForm, SiteGroupForm
+
+import datetime, hashlib, pytz, requests, uuid
 from time import gmtime, strftime
 from decimal import Decimal
+
+from sslscout.models import Profile, SiteGroup, Site, CheckEngine, CheckQueue, CheckResult
+from sslscout.forms import ProfileForm, SiteGroupForm
 
 
 ### renders any static page
@@ -67,7 +69,7 @@ def add_sitegroup(request):
                 sg = SiteGroup()
                 
                 ### add values from form
-                sg.user = request.user()
+                sg.user = request.user
                 sg.interval_hours = form['interval_hours'].data
                 sg.alert = form['alert'].data
                 sg.save()
@@ -93,7 +95,7 @@ def edit_sitegroup(request,sitegroupid):
         form = SiteGroupForm(request.POST)
         if form.is_valid():        
             ### add values from form
-            sg.user = request.user()
+            sg.user = request.user
             sg.interval_hours = form['interval_hours'].data
             sg.alert = form['alert'].data
             sg.save()
