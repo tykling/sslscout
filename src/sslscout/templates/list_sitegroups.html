@@ -1,0 +1,40 @@
+                    {% extends "skeleton.html" %}
+                    
+                    {% block title %}
+                    <title>Site Groups</title>
+                    {% endblock title %}
+                    
+                    {% block content %}
+                    <h2>Site Groups</h2>
+                    
+                    {% if sitegroups.count == 0 %}
+                        <p>No Site Groups defined. Go <a href="/sitegroups/add/">add one</a>!</p>
+                    {% else %}
+                        <table class="table table-striped table-hover ">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Check Interval</th>
+                                    <th>Reporting</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sg in sitegroups %}
+                                    <tr>
+                                        <td>{{ sg.name }}</td>
+                                        <td>{{ sg.interval_hours }}</td>
+                                        <td>{{ sg.alert }}</td>
+                                        <td>
+                                            <a href="/sitegroups/edit/{{ sg.id }}/" class="btn btn-default">Edit</a>
+                                            {% if scount.{{sg.id}} == 0 %}
+                                                <a href="/sitegroups/delete/{{ sg.id }}/" class="btn btn-danger">Delete</a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <p><a href="/sitegroups/edit/{{ sg.id }}/" class="btn btn-default">Add New</a>
+                    {% endif %}
+                    {% endblock content %}

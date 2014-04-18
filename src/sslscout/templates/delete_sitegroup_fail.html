@@ -1,0 +1,11 @@
+                    {% extends "skeleton.html" %}
+                    
+                    {% block title %}
+                    <title>Unable to delete SiteGroup</title>
+                    {% endblock title %}
+                    
+                    {% block content %}
+                    <h2>Unable to delete SiteGroup</h2>
+                    <p>The SiteGroup {{ sg.name }} can not be deleted because {{ sitecount }} sites are still members of this group. 
+                    Please move the sites to another sitegroup before deleting it.</p>
+                    {% endblock content %}

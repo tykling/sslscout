@@ -15,7 +15,9 @@ class Profile(models.Model):
 ### contains all site groups
 class SiteGroup(models.Model):
     user = models.ForeignKey(User)
-    interval_hours = models.IntegerField()
+    name = models.CharField(max_length=50)
+    interval_hours = models.PositiveIntegerField()
+    alert = models.BooleanField()
 
 
 ### contains all site definitions    
@@ -54,7 +56,6 @@ class CheckResult(models.Model):
     protocolsupport_score = models.IntegerField(null=True)
     keyexchange_score = models.IntegerField(null=True)
     cipherstrength_score = models.IntegerField(null=True)
-
 
 
 ### import signals from signals.py (for profile autocreation on user creation)
