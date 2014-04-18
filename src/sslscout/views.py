@@ -88,7 +88,7 @@ def add_sitegroup(request):
 @login_required
 ### edit sitegroup
 def edit_sitegroup(request,sitegroupid):
-    sg = SiteGroup.objects.get(id=sitegroupid)
+    sg = get_object_or_404(SiteGroup, id=sitegroupid)
     if request.method == 'POST':
         form = EditSiteGroupForm(request.POST)
         if form.is_valid():        
@@ -114,7 +114,7 @@ def edit_sitegroup(request,sitegroupid):
 ### delete sitegroup
 def delete_sitegroup(request, sitegroupid):
     ### if this sitegroup doesn't exist or is not owned by this user, return 404
-    sg = get_object_or_404(DeleteSiteGroupForm, id=sitegroupid, user=request.user)
+    sg = get_object_or_404(SiteGroup, id=sitegroupid, user=request.user)
 
     ### check that this sitegroup has 0 sites before deleting
     sitecount = Site.objects.filter(sitegroup=sg).count()
@@ -144,9 +144,9 @@ def delete_sitegroup(request, sitegroupid):
 ### list sitegroups
 def list_sitegroups(request):
     ### get a list of this users sitegroups
-    sitegroups = SiteGroup.objects.get(user=request.user)
-    
-    ### find the number of sites under each sitegroup
+    sitegroups = SiteGroup.objects.filter(user=request.user)
+
+    ### find the number of sites belonging to each sitegroup
     sgcount = {}
     for sg in sitegroups:
         scount[sg.id] = Site.objects.count(sitegroup=sg)

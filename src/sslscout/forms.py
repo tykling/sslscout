@@ -1,5 +1,5 @@
 from django import forms
-from sslscout.models import Profile
+from sslscout.models import Profile, SiteGroup
 
 ### edit profile form
 class ProfileForm(forms.ModelForm):
