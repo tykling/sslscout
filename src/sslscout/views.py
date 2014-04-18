@@ -5,7 +5,7 @@ from django.http import HttpResponseBadRequest, HttpResponseForbidden, HttpRespo
 from django.contrib.auth.decorators import login_required
 from django import forms
 from sslscout.models import Profile, SiteGroup, Site, CheckEngine, CheckQueue, CheckResult
-from sslscout.forms import ProfileForm, AddSiteGroupForm, SiteGroupForm
+from sslscout.forms import ProfileForm, SiteGroupForm
 from time import gmtime, strftime
 from decimal import Decimal
 
@@ -59,7 +59,7 @@ def profile_edit(request):
 ### add sitegroup
 def add_sitegroup(request):
     if request.method == 'POST':
-        form = AddSiteGroupForm(request.POST)
+        form = SiteGroupForm(request.POST)
         if form.is_valid():
             ### validate interval
             if form['interval_hours'].data > 0:
@@ -75,9 +75,9 @@ def add_sitegroup(request):
                 return HttpResponseRedirect('/sitegroups/')
         else:
             ### form is not valid
-            form = AddSiteGroupForm(request.POST)
+            form = SiteGroupForm(request.POST)
     else:
-        form = AddSiteGroupForm()
+        form = SiteGroupForm()
     
     ### return response
     return render(request,'add_sitegroup.html', {
@@ -90,7 +90,7 @@ def add_sitegroup(request):
 def edit_sitegroup(request,sitegroupid):
     sg = get_object_or_404(SiteGroup, id=sitegroupid)
     if request.method == 'POST':
-        form = EditSiteGroupForm(request.POST)
+        form = SiteGroupForm(request.POST)
         if form.is_valid():        
             ### add values from form
             sg.user = request.user()
@@ -100,9 +100,9 @@ def edit_sitegroup(request,sitegroupid):
             return HttpResponseRedirect('/sitegroups/')
         else:
             ### form is not valid
-            form = AddSiteGroupForm(request.POST)
+            form = SiteGroupForm(request.POST)
     else:
-        form = AddSiteGroupForm(instance=sg)
+        form = SiteGroupForm(instance=sg)
     
     ### return response
     return render(request,'edit_sitegroup.html', {
