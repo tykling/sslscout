@@ -70,6 +70,7 @@ def add_sitegroup(request):
                 
                 ### add values from form
                 sg.user = request.user
+                sg.name = form['name'].data
                 sg.interval_hours = form['interval_hours'].data
                 sg.alert = form['alert'].data
                 sg.save()
@@ -96,6 +97,7 @@ def edit_sitegroup(request,sitegroupid):
         if form.is_valid():        
             ### add values from form
             sg.user = request.user
+            sg.name = form['name'].data
             sg.interval_hours = form['interval_hours'].data
             sg.alert = form['alert'].data
             sg.save()
