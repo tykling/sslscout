@@ -16,13 +16,12 @@ class SiteGroupForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(SiteGroupForm, self).clean()
+
+        ### check that interval_hours is 24 or more
         interval_hours = cleaned_data.get("interval_hours")
         if interval_hours < 24:
-            msg = u"The lowest permitted check interval is 24 hours."
-            self._errors["interval_hours"] = self.error_class([msg])
-
-        ### remove the invalid field from cleaned_data
-        del cleaned_data["interval_hours"]
+            self._errors["interval_hours"] = self.error_class([u"The lowest permitted check interval is 24 hours."])
+            del cleaned_data["interval_hours"]
         
         ### return the cleaned data.
         return cleaned_data

@@ -9,6 +9,9 @@
                         <form method="post" class="form-horizontal">
                             <fieldset>
                                 <legend>Add New Site Group</legend>
+                                <p>Site Groups are where you define the check interval and alerting options. 
+                                You must have at least one group defined before adding sites, and you can add as many groups as you need.</p>
+
                                 {% if form.errors %}
                                     <ul id="messagelist">
                                         <p>The following errors were found:</p>
@@ -17,8 +20,6 @@
                                         {% endfor %}
                                     </ul>
                                 {% endif %}
-                                <p>Site Groups are where you define the check interval and alerting options. 
-                                You must have at least one group defined before adding sites, and you can add as many groups as you need.</p>
 
                                 {% csrf_token %}
                                 <div class="form-group">
@@ -29,7 +30,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="id_interval_hours" class="col-lg-2 control-label">Interval (min. 24):</label> {% if form.interval_hours.errors %} <span class="error">{{ form.interval_hours.errors|join:", " }}</span>{% endif %}
+                                    <label for="id_interval_hours" class="col-lg-2 control-label">Interval (min. 24h):</label> {% if form.interval_hours.errors %} <span class="error">{{ form.interval_hours.errors|join:", " }}</span>{% endif %}
                                     <div class="col-lg-10">
                                         <input value="{{ form.interval_hours.value|default_if_none:"" }}" type="number" name="interval_hours" class="form-control" id="id_interval_hours" placeholder="Check Interval (hours, min. 24)">
                                     </div>

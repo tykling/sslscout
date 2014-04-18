@@ -27,7 +27,7 @@
                                         <td>{{ sg.alert }}</td>
                                         <td>
                                             <a href="/sitegroups/edit/{{ sg.id }}/" class="btn btn-default">Edit</a>
-                                            {% if sitecount.{{sg.id}} == 0 %}
+                                            {% if sitecount.site__set.count == 0 %}
                                                 <a href="/sitegroups/delete/{{ sg.id }}/" class="btn btn-danger">Delete</a>
                                             {% endif %}
                                         </td>
