@@ -15,7 +15,7 @@ class SiteGroupForm(forms.ModelForm):
         fields = ('name','interval_hours','alert')
 
     def clean(self):
-        cleaned_data = super(AddSiteGroupForm, self).clean()
+        cleaned_data = super(SiteGroupForm, self).clean()
         interval_hours = cleaned_data.get("interval_hours")
         if interval_hours < 24:
             msg = u"The lowest permitted check interval is 24 hours."

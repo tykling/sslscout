@@ -24,22 +24,21 @@
                                 <div class="form-group">
                                     <label for="id_name" class="col-lg-2 control-label">Group Name:</label>
                                     <div class="col-lg-10">
-                                        <input value="{{ form.name.value|default_if_none:""  }}" type="text" name="name" class="form-control" id="id_name">
+                                        <input value="{{ form.name.value|default_if_none:""  }}" type="text" name="name" class="form-control" id="id_name" placeholder="Group Name (ie. 'Production Sites')">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="id_interval_hours" class="col-lg-2 control-label">Interval (min. 24):</label> {% if form.interval_hours.errors %} <span class="error">{{ form.interval_hours.errors|join:", " }}</span>{% endif %}
                                     <div class="col-lg-10">
-                                        <input value="{{ form.interval_hours.value|default_if_none:"" }}" type="text" name="interval_hours" class="form-control" id="id_interval_hours" placeholder="Check Interval (hours, min. 24)">
+                                        <input value="{{ form.interval_hours.value|default_if_none:"" }}" type="number" name="interval_hours" class="form-control" id="id_interval_hours" placeholder="Check Interval (hours, min. 24)">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <div class="checkbox">
-                                        <label for="id_alert" class="col-lg-2 control-label">
-                                            <input type="checkbox" name="alert" id="id_alert" {% if form.alert %}checked{% endif %} > Alert me by mail when the rating for sites in this group changes
-                                        </label>
+                                    <label for="id_alert" class="col-lg-2 control-label">E-Mail Alerts</label>
+                                    <div class="col-lg-10">
+                                        <input type="checkbox" name="alert" id="id_alert" {% if form.alert %}checked{% endif %} > <label for="id_alert" class="control-label">Alert me by mail when the rating for sites in this group changes</label>
                                     </div>
                                 </div>
 
