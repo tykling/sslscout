@@ -5,12 +5,12 @@ from django.http import HttpResponseBadRequest, HttpResponseForbidden, HttpRespo
 from django.contrib.auth.decorators import login_required
 from django import forms
 from sslscout.models import Profile, SiteGroup, Site, CheckEngine, CheckQueue, CheckResult
-from sslscout.forms import ProfileForm
+from sslscout.forms import ProfileForm, AddSiteGroupForm, SiteGroupForm
 from time import gmtime, strftime
 from decimal import Decimal
 
 
-### renders a static page
+### renders any static page
 def staticpage(request,page):
     return render(request,page)
 
@@ -146,13 +146,7 @@ def list_sitegroups(request):
     ### get a list of this users sitegroups
     sitegroups = SiteGroup.objects.filter(user=request.user)
 
-    ### find the number of sites belonging to each sitegroup
-    sgcount = {}
-    for sg in sitegroups:
-        scount[sg.id] = Site.objects.count(sitegroup=sg)
-        
     return render(request, 'list_sitegroups.html', {
-        'sitegroups': sg,
-        'scount': scount
+        'sitegroups': sitegroups,
     })
 
