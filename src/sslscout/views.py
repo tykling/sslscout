@@ -91,7 +91,13 @@ def add_sitegroup(request):
 @login_required
 ### edit sitegroup
 def edit_sitegroup(request,sitegroupid):
+    ### get sitegroup
     sg = get_object_or_404(SiteGroup, id=sitegroupid)
+
+    ### check if this sitegroup belongs to this user
+    if request.user != sg.user:
+        return HttpResponseForbidden()
+
     if request.method == 'POST':
         form = SiteGroupForm(request.POST)
         if form.is_valid():        
