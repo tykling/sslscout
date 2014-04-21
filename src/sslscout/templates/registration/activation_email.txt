@@ -1,5 +1,5 @@
-You signed up for an sslscout account at using this email 
-address. Please activate your account by pressing the link below:
+You've signed up for an sslscout account at https://{{ site }}, by using this email address.
+Please activate your account by pressing the link below:
 
 https://{{ site }}/accounts/activate/{{ activation_key }}/
 
