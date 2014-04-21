@@ -26,15 +26,17 @@
                                         <td>{{ sg.interval_hours }} hours</td>
                                         <td>{{ sg.alert }}</td>
                                         <td>
-                                            <a href="/sitegroups/edit/{{ sg.id }}/" class="btn btn-default">Edit</a>
-                                            {% if sg.site__set.count == 0 %}
+                                            <a href="/sitegroups/edit/{{ sg.id }}/" class="btn btn-info">Edit</a>
+                                            {% if sg.site_set.count == 0 %}
                                                 <a href="/sitegroups/delete/{{ sg.id }}/" class="btn btn-danger">Delete</a>
+                                            {% else %}
+                                                <a href="/sites/group/{{ sg.id }}/" class="btn btn-info">Sites</a>
                                             {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <p><a href="/sitegroups/add/" class="btn btn-default">Add New</a></p>
+                        <p><a href="/sitegroups/add/" class="btn btn-primary">Add New</a></p>
                     {% endif %}
                     {% endblock content %}
