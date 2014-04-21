@@ -14,7 +14,7 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Check Interval</th>
+                                    <th>Check Interval (h)</th>
                                     <th>Reporting</th>
                                     <th>Action</th>
                                 </tr>
@@ -23,7 +23,7 @@
                                 {% for sg in sitegroups %}
                                     <tr>
                                         <td>{{ sg.name }}</td>
-                                        <td>{{ sg.interval_hours }}</td>
+                                        <td>{{ sg.interval_hours }} hours</td>
                                         <td>{{ sg.alert }}</td>
                                         <td>
                                             <a href="/sitegroups/edit/{{ sg.id }}/" class="btn btn-default">Edit</a>
