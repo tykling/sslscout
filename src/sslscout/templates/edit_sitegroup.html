@@ -9,14 +9,6 @@
                         <form method="post" class="form-horizontal">
                             <fieldset>
                                 <legend>Edit Site Group {{ form.name.value|default_if_none:"" }}</legend>
-                                {% if form.errors %}
-                                    <ul id="messagelist">
-                                        <p>The following errors were found:</p>
-                                        {% for error in form.errors %}
-                                        <li class="error">{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
 
                                 {% csrf_token %}
                                 <div class="form-group">

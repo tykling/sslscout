@@ -33,22 +33,12 @@ def profile(request):
 def profile_edit(request):
     ### get the profile
     profile = Profile.objects.get(user=request.user)
+    form = ProfileForm(request.POST or None, instance=profile)
 
-    if request.method == 'POST':
-        form = ProfileForm(request.POST)
-        if form.is_valid():
-
-            ### save updated profile data
-            profile.first_name = form['first_name'].data
-            profile.last_name = form['last_name'].data
-            profile.country = form['country'].data
-            profile.save()
-            return HttpResponseRedirect('/profile/')
-        else:
-            ### form is not valid
-            form = ProfileForm(request.POST)
-    else:
-        form = ProfileForm(instance=profile)
+    ### check if the form has been POSTed and is valid
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/profile/')
     
     ### return response
     return render(request,'edit_profile.html', {
@@ -57,64 +47,24 @@ def profile_edit(request):
     })
 
 
+### add/edit sitegroup function
 @login_required
-### add sitegroup
-def add_sitegroup(request):
-    if request.method == 'POST':
-        form = SiteGroupForm(request.POST)
-        if form.is_valid():
-            ### validate interval
-            if form['interval_hours'].data > 0:
-                ### create new sitegroup
-                sg = SiteGroup()
-                
-                ### add values from form
-                sg.user = request.user
-                sg.name = form['name'].data
-                sg.interval_hours = form['interval_hours'].data
-                sg.alert = form['alert'].data
-                sg.save()
-                
-                return HttpResponseRedirect('/sitegroups/')
-        else:
-            ### form is not valid
-            form = SiteGroupForm(request.POST)
+def sitegroup(request,sitegroupid=None):
+    if sitegroupid:
+        sitegroup = get_object_or_404(SiteGroup, id=sitegroupid, user=request.user)
+        form = SiteGroupForm(request.POST or None, instance=sitegroup)
+        template = 'edit_sitegroup.html'
     else:
-        form = SiteGroupForm()
-    
-    ### return response
-    return render(request,'add_sitegroup.html', {
-        'form': form
-    })
+        form = SiteGroupForm(request.POST or None)
+        template = 'add_sitegroup.html'
 
+    if form.is_valid():
+        sg = form.save(commit=False)
+        sg.user=request.user
+        sg.save()
+        return HttpResponseRedirect('/sitegroups/')
 
-@login_required
-### edit sitegroup
-def edit_sitegroup(request,sitegroupid):
-    ### get sitegroup
-    sg = get_object_or_404(SiteGroup, id=sitegroupid)
-
-    ### check if this sitegroup belongs to this user
-    if request.user != sg.user:
-        return HttpResponseForbidden()
-
-    if request.method == 'POST':
-        form = SiteGroupForm(request.POST)
-        if form.is_valid():        
-            ### add values from form
-            sg.name = form['name'].data
-            sg.interval_hours = form['interval_hours'].data
-            sg.alert = form['alert'].data
-            sg.save()
-            return HttpResponseRedirect('/sitegroups/')
-        else:
-            ### form is not valid
-            form = SiteGroupForm(request.POST)
-    else:
-        form = SiteGroupForm(instance=sg)
-    
-    ### return response
-    return render(request,'edit_sitegroup.html', {
+    return render(request, template, {
         'form': form
     })
 

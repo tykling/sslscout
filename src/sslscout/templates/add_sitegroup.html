@@ -12,15 +12,6 @@
                                 <p>Site Groups are where you define the check interval and alerting options. 
                                 You must have at least one group defined before adding sites, and you can add as many groups as you need.</p>
 
-                                {% if form.errors %}
-                                    <ul id="messagelist">
-                                        <p>The following errors were found:</p>
-                                        {% for error in form.errors %}
-                                        <li class="error">{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <label for="id_name" class="col-lg-2 control-label">Group Name:</label>
@@ -45,7 +36,7 @@
 
                                 <div class="form-group">
                                     <div class="col-lg-10 col-lg-offset-2">
-                                        <a href="/profile/" class="btn btn-default">Cancel</a>
+                                        <a href="/sitegroups/" class="btn btn-default">Cancel</a>
                                         <button type="submit" class="btn btn-primary">Add</button>
                                     </div>
                                 </div>
