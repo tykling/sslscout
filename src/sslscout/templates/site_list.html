@@ -22,7 +22,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for site in sg.site_set %}
+                                {% for site in sites %}
                                 <tr>
                                     <td>{{ site.hostname }}</td>
                                     <td>{{ site.sitegroup }}</td>
@@ -33,8 +33,10 @@
                                         <a href="/sites/{{site.id}}/edit/" class="btn btn-default">Edit</a> 
                                         <a href="/sites/{{site.id}}/edit/" class="btn btn-danger">Delete</a> 
                                     </td>
-                                </td>
+                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
+                        {% endif %}
                     </div>
                     {% endblock content %}

@@ -115,9 +115,11 @@ def sitegroup_list(request):
 def sitegroup_details(request,sitegroupid):
     ### if this sitegroup doesn't exist or is not owned by this user, return 404
     sg = get_object_or_404(SiteGroup, id=sitegroupid, user=request.user)
+    sites = Site.objects.filter(sitegroup=sg)
     
     return render(request, 'sitegroup_details.html', {
         'sg': sg,
+        'sites': sites
     })
 
 
@@ -151,6 +153,7 @@ def site_add_edit(request,siteid=None,sitegroupid=None):
         return HttpResponseRedirect('/sites/')
 
     form.fields["sitegroup"].queryset = SiteGroup.objects.filter(user=request.user)
+    form.fields["sitegroup"].widget.attrs['class'] = 'form-control'
     return render(request, template, {
         'form': form
     })
