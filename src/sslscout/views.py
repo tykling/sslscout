@@ -185,7 +185,7 @@ def site_delete(request, siteid):
 @login_required
 def site_details(request, siteid):
     ### if this site doesn't exist or is not owned by this user, return 404
-    site = get_object_or_404(Site, id=siteid, user=request.user)
+    site = get_object_or_404(Site, id=siteid, sitegroup__user=request.user)
 
     return render(request, 'site_details.html', {
         'site': site,
