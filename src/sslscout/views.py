@@ -141,7 +141,7 @@ def site_add_edit(request,siteid=None,sitegroupid=None):
         sg = get_object_or_404(SiteGroup, id=sitegroupid, user=request.user)
         
     if siteid:
-        site = get_object_or_404(Site, id=siteid, user=request.user)
+        site = get_object_or_404(Site, id=siteid, sitegroup__user=request.user)
         form = SiteForm(request.POST or None, instance=site)
         template = 'site_edit.html'
     else:
