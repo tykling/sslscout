@@ -9,7 +9,7 @@ from time import gmtime, strftime
 from decimal import Decimal
 
 from sslscout.models import Profile, SiteGroup, Site, CheckEngine, CheckQueue, CheckResult
-from sslscout.forms import ProfileForm, SiteGroupForm
+from sslscout.forms import ProfileForm, SiteGroupForm, DeleteSiteGroupForm, SiteForm, DeleteSiteForm
 
 
 ### renders any static page
@@ -135,6 +135,9 @@ def site_list(request):
 ### add / edit site
 @login_required
 def site_add_edit(request,siteid=None,sitegroupid=None):
+    if sitegroupid:
+        sg = get_object_or_404(SiteGroup, id=sitegroupid, user=request.user)
+        
     if siteid:
         site = get_object_or_404(Site, id=siteid, user=request.user)
         form = SiteForm(request.POST or None, instance=site)
@@ -147,6 +150,7 @@ def site_add_edit(request,siteid=None,sitegroupid=None):
         site = form.save()
         return HttpResponseRedirect('/sites/')
 
+    form.fields["sitegroup"].queryset = SiteGroup.objects.filter(user=request.user)
     return render(request, template, {
         'form': form
     })
@@ -183,6 +187,5 @@ def site_details(request, siteid):
     return render(request, 'site_details.html', {
         'site': site,
     })
-
 
 

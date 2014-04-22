@@ -19,6 +19,12 @@ class SiteGroup(models.Model):
     interval_hours = models.PositiveIntegerField()
     alert = models.BooleanField()
 
+    def __unicode__(self):
+        if self.alert:
+            return "%s (%sh,alerting)" % (self.name,self.interval_hours)
+        else:
+            return "%s (%sh,no alerting)" % (self.name,self.interval_hours)
+
 
 ### contains all site definitions    
 class Site(models.Model):

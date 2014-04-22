@@ -44,6 +44,7 @@ class DeleteSiteGroupForm(forms.ModelForm):
         model = SiteGroup
         fields = []
 
+
 ### add/edit site form
 class SiteForm(forms.ModelForm):
     class Meta:
