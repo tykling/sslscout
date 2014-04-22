@@ -1,0 +1,15 @@
+                    {% extends "skeleton.html" %}
+                    
+                    {% block title %}
+                    <title>Confirm Site Delete</title>
+                    {% endblock title %}
+                    
+                    {% block content %}
+                    <h2>Confirm Delete</h2>
+                    <p>Really delete the site {{ site.name }} ?</p>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <a href="/sites/" class="btn btn-default">Cancel</a>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    {% endblock content %}

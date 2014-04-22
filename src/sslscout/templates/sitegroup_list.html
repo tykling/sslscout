@@ -16,8 +16,8 @@
                                     <th>Name</th>
                                     <th>Check Interval</th>
                                     <th>Reporting</th>
-                                    <th>Action</th>
                                     <th>Sites</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -26,18 +26,13 @@
                                         <td>{{ sg.name }}</td>
                                         <td>{{ sg.interval_hours }} hours</td>
                                         <td>{{ sg.alert }}</td>
+                                        <td>{{ sg.site_set.count }}</td>
                                         <td>
-                                            <a href="/sitegroups/edit/{{ sg.id }}/" class="btn btn-info">Edit</a>
+                                            <a href="/sitegroups/{{ sg.id }}/" class="btn btn-info">Details</a>
+                                            <a href="/sitegroups/{{ sg.id }}/edit/" class="btn btn-info">Edit</a>
                                             {% if sg.site_set.count == 0 %}
-                                                <a href="/sitegroups/delete/{{ sg.id }}/" class="btn btn-danger">Delete</a>
-                                            {% else %}
-                                                <a href="/sitegroups/delete/{{ sg.id }}/" class="btn btn-danger btn-disabled" disabled>Delete</a>
+                                                <a href="/sitegroups/{{ sg.id }}/delete/" class="btn btn-danger">Delete</a>
                                             {% endif %}
-                                        </td>
-                                        <td>
-                                            <span class="badge">{{ sg.site_set.count }}</span> 
-                                            <a href="/sites/group/{{ sg.id }}/" class="btn btn-info">List Sites</a> 
-                                            <a href="/sites/group/{{ sg.id }}/add/" class="btn btn-success">Add Site</a>
                                         </td>
                                     </tr>
                                 {% endfor %}

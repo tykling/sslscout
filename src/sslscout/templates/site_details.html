@@ -1,0 +1,45 @@
+                    {% extends "skeleton.html" %}
+                    
+                    {% block title %}
+                    <title>Site Details - {{ site.hostname }}</title>
+                    {% endblock title %}
+                    
+                    {% block content %}
+                    <div class="col-lg-8">
+                        <h1>Site {{ site.hostname }}</h1>
+                        <p>This site is a member of the group {{ site.sitegroup.name }} which is being checked every <b>{{ site.sitegroup.interval_hours }} hours<b>. 
+                        You <b>{% if site.sitegroup.alert %}will{% else %}will not{% endif %}</b> receive email alerts when the rating this site changes.</p>
+
+                        <h1>Check Results</h1>
+                        {% if site.checkresult_set.count == 0 %}
+                        <p>No check results found for this site.</p>
+                        {% else %}
+                        <table class="table table-striped table-hover" style="font-size:larger; vertical-align:middle;">
+                            <thead>
+                                <tr>
+                                    <th>When</th>
+                                    <th>Overall</th>
+                                    <th>Certificate</th>
+                                    <th>Protocol</th>
+                                    <th>Key Exchange</th>
+                                    <th>Cipher Strength</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cr in site.checkresult_set %}
+                                <tr>
+                                    <td>{{ cr.check_finish_datetime }}</td>
+                                    <td>{{ cr.overall_rating }}</td>
+                                    <td>{{ cr.certificate_score }}</td>
+                                    <td>{{ cr.protocolsupport_score }}</td>
+                                    <td>{{ cr.keyexchange_score }}</td>
+                                    <td>{{ cr.cipherstrength_score }}</td>
+                                    <td>
+                                        <a href="/checkresults/{{cr.id}}/" class="btn btn-info">Details</a> 
+                                    </td>
+                                </td>
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endblock content %}

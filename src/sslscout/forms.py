@@ -1,5 +1,5 @@
 from django import forms
-from sslscout.models import Profile, SiteGroup
+from sslscout.models import Profile, SiteGroup, Site
 
 ### edit profile form
 class ProfileForm(forms.ModelForm):
@@ -37,9 +37,23 @@ class SiteGroupForm(forms.ModelForm):
         ### return the cleaned data.
         return cleaned_data
 
+
 ### delete sitegroup form
 class DeleteSiteGroupForm(forms.ModelForm):
     class Meta:
         model = SiteGroup
+        fields = []
+
+### add/edit site form
+class SiteForm(forms.ModelForm):
+    class Meta:
+        model = Site
+        fields = ('hostname','sitegroup')
+
+
+### delete site form
+class DeleteSiteForm(forms.ModelForm):
+    class Meta:
+        model = Site
         fields = []
 

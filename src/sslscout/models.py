@@ -26,7 +26,7 @@ class Site(models.Model):
     hostname = models.CharField(max_length=256)
 
     def __unicode__(self):
-        return u'B%s - %s' % (self.id, self.create_time)
+        return self.hostname
 
 
 ### defines the different engines available

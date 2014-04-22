@@ -36,16 +36,25 @@ urlpatterns = patterns('',
     url(r'^register/closed/$', TemplateView.as_view(template_name='registration/registration_closed.html'), name='registration_disallowed'),
     
     ### profile stuff
-    url(r'^profile/$', 'sslscout.views.profile'),
+    url(r'^profile/$', 'sslscout.views.profile_show'),
     url(r'^profile/edit/$', 'sslscout.views.profile_edit'),    
 
-    ### site and sitegroup related stuff
-    #url(r'^sites/$', 'sslscout.views.sites'),
-    #url(r'^sites/add/$', 'sslscout.views.add_site'),
-    #url(r'^sites/edit/(?P<siteid>\w+)/$', 'sslscout.views.edit_site'),
-    #url(r'^sites/delete/(?P<siteid>\w+)/$', 'sslscout.views.delete_site'),
-    url(r'^sitegroups/$', 'sslscout.views.list_sitegroups'),
-    url(r'^sitegroups/add/$', 'sslscout.views.sitegroup'),
-    url(r'^sitegroups/edit/(?P<sitegroupid>\w+)/$', 'sslscout.views.sitegroup'),
-    url(r'^sitegroups/delete/(?P<sitegroupid>\w+)/$', 'sslscout.views.delete_sitegroup'),    
+    ### sites
+    url(r'^sites/$', 'sslscout.views.site_list'),
+    url(r'^sites/add/$', 'sslscout.views.site_add_edit'),
+    url(r'^sites/(?P<siteid>\w+)/$', 'sslscout.views.site_details'),
+    url(r'^sites/(?P<siteid>\w+)/edit/$', 'sslscout.views.site_add_edit'),
+    url(r'^sites/(?P<siteid>\w+)/delete/$', 'sslscout.views.site_delete'),
+
+    ### sitegroups
+    url(r'^sitegroups/$', 'sslscout.views.sitegroup_list'),
+    url(r'^sitegroups/add/$', 'sslscout.views.sitegroup_add_edit'),
+    url(r'^sitegroups/(?P<sitegroupid>\w+)/edit/$', 'sslscout.views.sitegroup_add_edit'),
+    url(r'^sitegroups/(?P<sitegroupid>\w+)/delete/$', 'sslscout.views.sitegroup_delete'),    
+    url(r'^sitegroups/(?P<sitegroupid>\w+)/$', 'sslscout.views.sitegroup_details'),
+    url(r'^sitegroups/(?P<sitegroupid>\w+)/addsite/$', 'sslscout.views.site_add_edit'),
+    
+    ### check results
+    url(r'^/checkresults/(?P<resultid>\w+)/$', 'sslscout.views.checkresult_details'),
+
 )
