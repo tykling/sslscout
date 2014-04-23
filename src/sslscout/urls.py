@@ -55,6 +55,6 @@ urlpatterns = patterns('',
     url(r'^sitegroups/(?P<sitegroupid>\w+)/addsite/$', 'sslscout.views.site_add_edit'),
     
     ### check results
-    url(r'^/checkresults/(?P<resultid>\w+)/$', 'sslscout.views.checkresult_details'),
+    #url(r'^/checkresults/(?P<resultid>\w+)/$', 'sslscout.views.checkresult_details'),
 
 )
