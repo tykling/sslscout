@@ -163,7 +163,7 @@ def site_add_edit(request,siteid=None,sitegroupid=None):
 @login_required
 def site_delete(request, siteid):
     ### if this site doesn't exist or is not owned by this user, return 404
-    site = get_object_or_404(Site, id=siteid, sitegroup.user=request.user)
+    site = get_object_or_404(Site, id=siteid, sitegroup__user=request.user)
     
     if request.method == 'POST':
         form = DeleteSiteForm(request.POST, instance=site)
