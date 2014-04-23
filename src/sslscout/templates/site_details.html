@@ -7,7 +7,7 @@
                     {% block content %}
                     <div class="col-lg-8">
                         <h1>Site {{ site.hostname }}</h1>
-                        <p>This site is a member of the group {{ site.sitegroup.name }} which is being checked every <b>{{ site.sitegroup.interval_hours }} hours<b>. 
+                        <p>This site is a member of the group {{ site.sitegroup.name }} which is being checked every <b>{{ site.sitegroup.interval_hours }} hours</b>. 
                         You <b>{% if site.sitegroup.alert %}will{% else %}will not{% endif %}</b> receive email alerts when the rating this site changes.</p>
 
                         <h1>Check Results</h1>
