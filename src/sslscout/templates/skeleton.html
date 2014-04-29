@@ -6,8 +6,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="/static/css/bootstrap.min.css" media="screen" />
         <link rel="stylesheet" href="/static/css/font-awesome.css">
+        <link rel="stylesheet" href="/static/css/sticky-footer.css">
     </head>
     <body>
+    <div id="wrap">
     <div class="navbar navbar-inverse">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-inverse-collapse"></button> 
@@ -27,18 +29,6 @@
                     <a href="/results/"><i class="fa fa-flag fa-lg"></i> Results</a>
                 </li>
                 {% endif %}
-                <li>
-                    <a href="/about/"><i class="fa fa-question fa-lg"></i> About</a>
-                </li>
-                <li>
-                    <a href="https://github.com/tykling/sslscout/"><i class="fa fa-github fa-lg"></i> Source Code</a>
-                </li>
-                <li>
-                    <a href="https://github.com/tykling/sslscout/issues/"><i class="fa fa-github fa-lg"></i> Report Issue</a>
-                </li>
-                <li>
-                    <a href="mailto:info@sslscout.com"><i class="fa fa-envelope fa-lg"></i> Contact</a>
-                </li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -76,6 +66,15 @@
                 </div>
             </div>
         </div>
+    </div>
+    </div>
+    <div id="footer">
+        <p class="muted credit text-center">
+            <a href="/about/"><i class="fa fa-question fa-lg"></i> About</a> · 
+            <a href="https://github.com/tykling/sslscout/"><i class="fa fa-github fa-lg"></i> Source Code</a> · 
+            <a href="https://github.com/tykling/sslscout/issues/"><i class="fa fa-github fa-lg"></i> Report Issue</a> · 
+            <a href="mailto:info@sslscout.com"><i class="fa fa-envelope fa-lg"></i> Contact</a>
+        </p>
     </div>
     <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script> 
     <script src="/static/js/bootstrap.min.js"></script>
