@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
-from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, CheckResult
+from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, SiteCheck
 from sslscout.engines import www_ssllabs_com, sslcheck_globalsign_com
 from threading import Thread
 import os, socket, sys, datetime
@@ -13,9 +13,9 @@ class Command(BaseCommand):
 
     
     ### function to run sitechecks
-    def runjob(self, *args, **options):
+    def engine(self, *args, **options):
         ### open listening socket (instead of writing a pidfile)
-        pidsocket = "/tmp/runjob.sock"
+        pidsocket = "/tmp/sslscout-engine-%s.sock" % settings.ENVIRONMENT
         if os.path.exists(pidsocket):
             ### bail out
             self.stdout.write('socket %s already exists, bailing out' % pidsocket)
@@ -30,11 +30,11 @@ class Command(BaseCommand):
                 sys.exit(1)
 
         ### get a list of active engines
-        engines = CheckEngine.objects.get(active=True)
+        engines = CheckEngine.objects.filter(active=True)
         enginethreads = []
         for engine in engines:
             ### check if this engine already has a job running
-            if SiteCheck.objects.count(finish_time=None,engine=engine).count() > 0:
+            if SiteCheck.objects.filter(finish_time=None,engine=engine).exclude(start_time=None).count() > 0:
                 ### skipping this engine
                 self.stdout.write('engine %s is already busy running a job' % engine.name)
                 continue
@@ -44,7 +44,7 @@ class Command(BaseCommand):
             for site in sites:
                 try:
                     latest_sitecheck = SiteCheck.objects.get(engine=engine,site=site).latest('finish_time')
-                except DoesNotExist:
+                except SiteCheck.DoesNotExist:
                     ### no previous checks registered for this site
                     latest_sitecheck = None
                 
@@ -59,15 +59,15 @@ class Command(BaseCommand):
                 sitecheck.save()
                 
                 if engine.engineclass == 'www_ssllabs_com':
-                    thread = www_ssllabs_com(sitecheck=sitecheck)
+                    thread = www_ssllabs_com(sitecheck.id)
                 elif engine.engineclass == 'sslcheck_globalsign_com':
-                    thread = sslcheck_globalsign_com(sitecheck=sitecheck)
+                    thread = sslcheck_globalsign_com(sitecheck.id)
                 else:
                     self.stdout.write('unknown engine, error')
                 
                 thread.start()
                 enginethreads.append(thread)
-
+                break
 
         ### finished looping through engines, wait for any spawned threads to finish
         if len(enginethreads) > 0:
@@ -76,9 +76,9 @@ class Command(BaseCommand):
                 et.join()
 
             ### all threads finished
-            self.stdout.write('all threads finished, results:')
-            for et in enginethreads:
-                print et.result
+            self.stdout.write('all threads finished')
+            #for et in enginethreads:
+            #    print et.result
         else:
             print "no threads started"
 

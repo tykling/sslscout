@@ -1,18 +1,18 @@
 import threading, requests, time
 from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck
-
+from bs4 import BeautifulSoup
 
 class www_ssllabs_com(threading.Thread):
     def __init__(self, sitecheckid):
-        super(Worker, self).__init__()
+        super(www_ssllabs_com, self).__init__()
         self.sitecheckid=sitecheckid
-        
+
     def run(self):
         ### get the sitecheck
-        sitecheck = SiteCheck.objects.get(id=sitecheckid)
+        sitecheck = SiteCheck.objects.get(id=self.sitecheckid)
 
         ### put the URL together
-        url = sitecheck.engine.checkurl + site.hostname
+        url = sitecheck.engine.checkurl + sitecheck.site.hostname
         
         ### begin requests session
         s = requests.Session()
