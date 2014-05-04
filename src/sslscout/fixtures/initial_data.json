@@ -1,0 +1,23 @@
+[
+  {
+    "model": "sslscout.checkengine",
+    "pk": 1,
+    "fields": {
+      "name": "Qualys SSL Labs",
+      "url": "https://www.ssllabs.com/ssltest/",
+      "checkurl": "https://www.ssllabs.com/ssltest/analyze.html?d=",
+      "function": "www_ssllabs_com"
+    }
+  },
+  {
+    "model": "sslscout.checkengine",
+    "pk": 2,
+    "fields": {
+      "name": "GlobalSign SSL Configuration Checker",
+      "url": "https://sslcheck.globalsign.com/",
+      "checkurl": "https://sslcheck.globalsign.com/en_US/sslcheck?host=",
+      "function": "sslcheck_globalsign_com",
+      "active": 0
+    }
+  }
+]

@@ -38,25 +38,20 @@ class Site(models.Model):
 ### defines the different engines available
 class CheckEngine(models.Model):
     name = models.CharField(max_length=50)
-    active = models.BooleanField()
+    url = models.CharField(max_length=200)
+    checkurl = models.CharField(max_length=200)
+    engineclass = models.CharField(max_length=50)
+    active = models.BooleanField(default=True)
 
 
-### the check queue
-class CheckQueue(models.Model):
+### contains the running and finished site checks and results
+class SiteCheck(models.Model):
     site = models.ForeignKey(Site)
     engine = models.ForeignKey(CheckEngine)
-    finished = models.BooleanField(default=False)
-    queue_time = models.DateTimeField(auto_now_add=True)
-    start_time = models.DateTimeField(null=True)
+    start_time = models.DateTimeField(auto_now_add=True)
     finish_time = models.DateTimeField(null=True)
+
     debug_html = models.TextField(null=True)
-
-
-### contains all check results
-class CheckResult(models.Model):
-    site = models.ForeignKey(Site)
-    check_queue_id = models.ForeignKey(CheckQueue)
-    check_finish_datetime = models.DateTimeField(auto_now_add=True)
     overall_rating = models.CharField(max_length=2,null=True)
     certificate_score = models.IntegerField(null=True)
     protocolsupport_score = models.IntegerField(null=True)
