@@ -12,7 +12,7 @@ class www_ssllabs_com(threading.Thread):
         sitecheck = SiteCheck.objects.get(id=self.sitecheckid)
 
         ### put the URL together
-        url = sitecheck.engine.checkurl + sitecheck.site.hostname
+        url = sitecheck.engine.checkurl + sitecheck.hostname
         
         ### begin requests session
         s = requests.Session()

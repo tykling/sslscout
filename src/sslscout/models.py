@@ -45,8 +45,9 @@ class CheckEngine(models.Model):
 
 
 ### contains the running and finished site checks and results
+### sitechecks are not linked to a specific site, the hostname of the site is recorded as a string in the sitecheck
 class SiteCheck(models.Model):
-    site = models.ForeignKey(Site)
+    hostname = models.CharField(max_length=256)
     engine = models.ForeignKey(CheckEngine)
     start_time = models.DateTimeField(auto_now_add=True)
     finish_time = models.DateTimeField(null=True)

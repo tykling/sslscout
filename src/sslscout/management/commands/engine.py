@@ -43,9 +43,10 @@ class Command(BaseCommand):
             sites = Site.objects.all()
             for site in sites:
                 try:
-                    latest_sitecheck = SiteCheck.objects.get(engine=engine,site=site).latest('finish_time')
+                    ### find the latest sitecheck for this hostname with this engine
+                    latest_sitecheck = SiteCheck.objects.get(engine=engine,hostname=site.hostname).latest('finish_time')
                 except SiteCheck.DoesNotExist:
-                    ### no previous checks registered for this site
+                    ### no previous checks registered for this hostname
                     latest_sitecheck = None
                 
                 ### if we have a latest_sitecheck, find out if it is more than interval_hours old
@@ -55,7 +56,7 @@ class Command(BaseCommand):
                         continue
 
                 ### OK, time to do a new check for this site
-                sitecheck = SiteCheck(site=site,engine=engine)
+                sitecheck = SiteCheck(hostname=site.hostname,engine=engine)
                 sitecheck.save()
                 
                 if engine.engineclass == 'www_ssllabs_com':
