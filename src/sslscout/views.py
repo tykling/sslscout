@@ -8,7 +8,7 @@ import datetime, hashlib, pytz, requests, uuid
 from time import gmtime, strftime
 from decimal import Decimal
 
-from sslscout.models import Profile, SiteGroup, Site, CheckEngine, CheckQueue, CheckResult
+from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck
 from sslscout.forms import ProfileForm, SiteGroupForm, DeleteSiteGroupForm, SiteForm, DeleteSiteForm
 
 
