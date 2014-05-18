@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
     
     ### function to run sitechecks
-    def engine(self, *args, **options):
+    def handle(self, *args, **options):
         ### open listening socket (instead of writing a pidfile)
         pidsocket = "/tmp/sslscout-engine-%s.sock" % settings.ENVIRONMENT
         if os.path.exists(pidsocket):
