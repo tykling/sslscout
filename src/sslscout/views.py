@@ -86,12 +86,12 @@ def sitegroup_delete(request, sitegroupid):
     if request.method == 'POST':
         form = DeleteSiteGroupForm(request.POST, instance=sg)
         if form.is_valid():
-            fg.delete()
+            sg.delete()
             return HttpResponseRedirect("/sitegroups/")
         else:
             return HttpResponseRedirect("/sitegroups/")
     else:
-        form = DeleteNewForm(instance=sg)
+        form = DeleteSiteGroupForm(instance=sg)
 
     return render(request, 'sitegroup_delete_confirm.html', {
         'sg': sg,
