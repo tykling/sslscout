@@ -1,4 +1,4 @@
-from sslscout.models import CheckQueue, Site, SiteGroup
+from sslscout.models import Site, SiteGroup, SiteCheck
 from django.conf import settings
 
 def getstats(request):
