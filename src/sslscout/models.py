@@ -44,14 +44,19 @@ class CheckEngine(models.Model):
     active = models.BooleanField(default=True)
 
 
-### contains the running and finished site checks and results
-### sitechecks are not linked to a specific site, the hostname of the site is recorded as a string in the sitecheck
+### contains the running and finished checks of hostnames
 class SiteCheck(models.Model):
     hostname = models.CharField(max_length=256)
     engine = models.ForeignKey(CheckEngine)
     start_time = models.DateTimeField(auto_now_add=True)
     finish_time = models.DateTimeField(null=True)
 
+
+### contains the results of a sitecheck, can contain multiple entries 
+### per sitecheck if a hostname resolves to multiple IP addresses
+class SiteCheckResult(models.Model):
+    sitecheck = models.ForeignKey(SiteCheck)
+    serverip = models.GenericIPAddressField(unpack_ipv4=True)
     debug_html = models.TextField(null=True)
     overall_rating = models.CharField(max_length=2,null=True)
     certificate_score = models.IntegerField(null=True)

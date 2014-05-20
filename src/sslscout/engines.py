@@ -1,5 +1,6 @@
 import threading, requests, time, logging, httplib
-from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck
+from django.utils import timezone
+from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, SiteCheckResult
 from bs4 import BeautifulSoup
 
 class www_ssllabs_com(threading.Thread):
@@ -23,14 +24,11 @@ class www_ssllabs_com(threading.Thread):
         
         ### begin requests session
         s = requests.Session()
-
-        ### make the initial request
-        r = s.get(url)
         
-        ### check for result every 5 seconds
+        ### make the check for results every 5 seconds
         while True:
             try:
-                ### check if this check is finished
+                ### make the request
                 r = s.get(url)
                 r.raise_for_status()
                 parsed_html = BeautifulSoup(r.text)
@@ -46,19 +44,38 @@ class www_ssllabs_com(threading.Thread):
                 time.sleep(delay)
                 continue
             else:
-                ### no refresh tag found, this check is finished, extract the result data from the html
-                sitecheck.debug_html = r.text
-                summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
-                sitecheck.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'},text='Overall Rating').parent.find('span').text
-                sitecheck.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
-                sitecheck.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
-                sitecheck.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
-                sitecheck.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
-                sitecheck.finish_time = timezone.now()
-                sitecheck.save()
+                ### no refresh tag found, this check is finished, 
+                ### extract the result data from the html, first find out if this is a single or multiple servers
+                multipletable = parsed_html.find('table', attrs={'id': 'multiTable'})
+                if not multipletable:
+                    summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
+                    result = SiteCheckResult(sitecheck=sitecheck)
+                    result.ip = parsed_html.find_all('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text
+                    result.overall_rating = summarydiv.find('div',attrs={'class': 'rating_g'}).text
+                    result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
+                    result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
+                    result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
+                    result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
+                    result.finish_time = timezone.now()
+                    result.save()
+                else:
+                    for server in multipletable.find_all('span',attrs={'class': 'ip'}):
+                        result = SiteCheckResult(sitecheck=sitecheck)
+                        
+                        ### get details page for this server
+                        r = s.get(sitecheck.engine.checkurl + server.find('a')['href'].split('?')[1][2:]
+                        parsed_html = BeautifulSoup(r.text)
+                        result.ip = parsed_html.find_all('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text
+                        result.overall_rating = summarydiv.find('div',attrs={'class': 'rating_g'}).text
+                        result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
+                        result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
+                        result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
+                        result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
+                        result.finish_time = timezone.now()
+                        result.save()
                 break
-        
-        ### thread run finished
+
+        ### thread finished
 
         
 class sslcheck_globalsign_com(threading.Thread):

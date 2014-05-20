@@ -1,12 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
-from django.utils import timezone
 from datetime import timedelta
 from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, SiteCheck
 from sslscout.engines import www_ssllabs_com, sslcheck_globalsign_com
 from threading import Thread
 import os, socket, sys, datetime
-httplib.HTTPConnection.debuglevel = 1
 
 class Command(BaseCommand):
     args = 'none'
