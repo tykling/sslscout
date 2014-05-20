@@ -40,6 +40,7 @@ class CheckEngine(models.Model):
     name = models.CharField(max_length=50)
     url = models.CharField(max_length=200)
     checkurl = models.CharField(max_length=200)
+    cacheclearurl = models.CharField(max_length=200)
     engineclass = models.CharField(max_length=50)
     active = models.BooleanField(default=True)
 

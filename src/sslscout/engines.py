@@ -19,8 +19,10 @@ class www_ssllabs_com(threading.Thread):
         ### get the sitecheck
         sitecheck = SiteCheck.objects.get(id=self.sitecheckid)
 
-        ### put the URL together
+        ### put the URLs together
+        clearurl = sitecheck.engine.cacheclearurl + sitecheck.hostname
         url = sitecheck.engine.checkurl + sitecheck.hostname
+        cachecleared = False
         
         ### begin requests session
         s = requests.Session()
@@ -29,7 +31,11 @@ class www_ssllabs_com(threading.Thread):
         while True:
             try:
                 ### make the request
-                r = s.get(url)
+                if cachecleared:
+                    r = s.get(url)
+                else:
+                    r = s.get(clearurl)
+                    cachecleared = True
                 r.raise_for_status()
                 parsed_html = BeautifulSoup(r.text)
             except Exception as E:
@@ -44,13 +50,18 @@ class www_ssllabs_com(threading.Thread):
                 time.sleep(delay)
                 continue
             else:
-                ### no refresh tag found, this check is finished, 
+                ### no refresh tag found, this check is now finished, 
                 ### extract the result data from the html, first find out if this is a single or multiple servers
                 multipletable = parsed_html.find('table', attrs={'id': 'multiTable'})
                 if not multipletable:
-                    summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
+                    ### create the result object
                     result = SiteCheckResult(sitecheck=sitecheck)
-                    result.ip = parsed_html.find_all('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text
+                    
+                    ### get the server IP
+                    result.ip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text
+                    
+                    ### get the results
+                    summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
                     result.overall_rating = summarydiv.find('div',attrs={'class': 'rating_g'}).text
                     result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
                     result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
@@ -62,10 +73,19 @@ class www_ssllabs_com(threading.Thread):
                     for server in multipletable.find_all('span',attrs={'class': 'ip'}):
                         result = SiteCheckResult(sitecheck=sitecheck)
                         
-                        ### get details page for this server
-                        r = s.get(sitecheck.engine.checkurl + server.find('a')['href'].split('?')[1][2:]
-                        parsed_html = BeautifulSoup(r.text)
-                        result.ip = parsed_html.find_all('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text
+                        ### get and parse the details page for this server
+                        try:
+                            r = s.get(sitecheck.engine.checkurl + server.find('a')['href'].split('?')[1][2:])
+                            r.raise_for_status()
+                            parsed_html = BeautifulSoup(r.text)
+                        except Exception as E:
+                            print "exception getting and parsing html from %s: %s" % (url,E)
+                            sitecheck.finish_time = timezone.now()
+                            sitecheck.save()
+                            break
+
+                        result.ip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text
+                        summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
                         result.overall_rating = summarydiv.find('div',attrs={'class': 'rating_g'}).text
                         result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
                         result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)

@@ -5,8 +5,8 @@
     "fields": {
       "name": "Qualys SSL Labs",
       "url": "https://www.ssllabs.com/ssltest/",
-      "checkurl": "https://www.ssllabs.com/ssltest/clearCache.html?d=",
-      "resulturl": "https://www.ssllabs.com/ssltest/analyze.html?d=",
+      "cacheclearurl": "https://www.ssllabs.com/ssltest/clearCache.html?d=",
+      "checkurl": "https://www.ssllabs.com/ssltest/analyze.html?d=",
       "engineclass": "www_ssllabs_com"
     }
   },
@@ -16,8 +16,8 @@
     "fields": {
       "name": "GlobalSign SSL Configuration Checker",
       "url": "https://sslcheck.globalsign.com/",
+      "cacheclearurl": "https://sslcheck.globalsign.com/en_US/sslcheck?host=",
       "checkurl": "https://sslcheck.globalsign.com/en_US/sslcheck?host=",
-      "resulturl": "https://sslcheck.globalsign.com/en_US/sslcheck?host=",
       "engineclass": "sslcheck_globalsign_com",
       "active": 0
     }
