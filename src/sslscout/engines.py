@@ -1,4 +1,4 @@
-import threading, requests, time
+import threading, requests, time, logging, httplib
 from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck
 from bs4 import BeautifulSoup
 
@@ -8,6 +8,13 @@ class www_ssllabs_com(threading.Thread):
         self.sitecheckid=sitecheckid
 
     def run(self):
+        ### initialize HTTP debug logging
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
+        requests_log = logging.getLogger("requests.packages.urllib3")
+        requests_log.setLevel(logging.DEBUG)
+        requests_log.propagate = True
+
         ### get the sitecheck
         sitecheck = SiteCheck.objects.get(id=self.sitecheckid)
 
@@ -22,9 +29,17 @@ class www_ssllabs_com(threading.Thread):
         
         ### check for result every 5 seconds
         while True:
-            r = s.get(url)
-            ### check if this check is finished
-            parsed_html = BeautifulSoup(r.html())
+            try:
+                ### check if this check is finished
+                r = s.get(url)
+                r.raise_for_status()
+                parsed_html = BeautifulSoup(r.text)
+            except Exception as E:
+                print "exception getting and parsing html from %s: %s" % (url,E)
+                sitecheck.finish_time = timezone.now()
+                sitecheck.save()
+                break
+                
             refresh = parsed_html.find_all('meta', attrs={'http-equiv': 'refresh'})
             if refresh:
                 delay = int(parsed_html.find_all('meta', attrs={'http-equiv': 'refresh'})[0].get('content').split(";")[0])
@@ -32,7 +47,7 @@ class www_ssllabs_com(threading.Thread):
                 continue
             else:
                 ### no refresh tag found, this check is finished, extract the result data from the html
-                sitecheck.debug_html = r.html()
+                sitecheck.debug_html = r.text
                 summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
                 sitecheck.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'},text='Overall Rating').parent.find('span').text
                 sitecheck.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)

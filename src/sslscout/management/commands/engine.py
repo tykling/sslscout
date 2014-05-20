@@ -6,6 +6,7 @@ from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, Si
 from sslscout.engines import www_ssllabs_com, sslcheck_globalsign_com
 from threading import Thread
 import os, socket, sys, datetime
+httplib.HTTPConnection.debuglevel = 1
 
 class Command(BaseCommand):
     args = 'none'
@@ -33,6 +34,9 @@ class Command(BaseCommand):
         engines = CheckEngine.objects.filter(active=True)
         enginethreads = []
         for engine in engines:
+            print "################################################################################"
+            print "############ Working on engine %s ##############################################" % engine.name
+            print "################################################################################"
             ### check if this engine already has a job running
             if SiteCheck.objects.filter(finish_time=None,engine=engine).exclude(start_time=None).count() > 0:
                 ### skipping this engine
@@ -42,9 +46,11 @@ class Command(BaseCommand):
             ### find a site that needs checking
             sites = Site.objects.all()
             for site in sites:
+                print "############ Working on site %s ##############################################" % site.hostname
+
                 try:
                     ### find the latest sitecheck for this hostname with this engine
-                    latest_sitecheck = SiteCheck.objects.get(engine=engine,hostname=site.hostname).latest('finish_time')
+                    latest_sitecheck = SiteCheck.objects.filter(engine=engine,hostname=site.hostname).latest('finish_time')
                 except SiteCheck.DoesNotExist:
                     ### no previous checks registered for this hostname
                     latest_sitecheck = None
@@ -53,9 +59,12 @@ class Command(BaseCommand):
                 if latest_sitecheck:
                     if latest_sitecheck.finish_time + timedelta(hours=site.sitegroup.interval_hours) > timezone.now():
                         ### not yet
+                        print "- this site does not need to be checked yet, skipping..."
                         continue
 
                 ### OK, time to do a new check for this site
+                print "- starting new sitecheck thread for this site..."
+
                 sitecheck = SiteCheck(hostname=site.hostname,engine=engine)
                 sitecheck.save()
                 
