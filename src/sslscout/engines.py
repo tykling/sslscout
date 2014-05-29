@@ -44,10 +44,11 @@ class www_ssllabs_com(threading.Thread):
                 sitecheck.save()
                 break
                 
-            refresh = parsed_html.find_all('meta', attrs={'http-equiv': 'refresh'})
+            refresh = parsed_html.find('meta', attrs={'http-equiv': 'refresh'})
             if refresh:
-                delay = int(parsed_html.find_all('meta', attrs={'http-equiv': 'refresh'})[0].get('content').split(";")[0])
-                time.sleep(delay)
+                #delay = int(refresh.get('content').split(";")[0])
+                #print "sleeping %s seconds, got meta-refresh tag: %s" % (delay,refresh)
+                time.sleep(20)
                 continue
             else:
                 ### no refresh tag found, this check is now finished, 
@@ -84,7 +85,7 @@ class www_ssllabs_com(threading.Thread):
                             sitecheck.save()
                             break
 
-                        result.ip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text
+                        result.ip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
                         summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
                         result.overall_rating = summarydiv.find('div',attrs={'class': 'rating_g'}).text
                         result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
