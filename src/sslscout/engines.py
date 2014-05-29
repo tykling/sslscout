@@ -2,6 +2,7 @@ import threading, requests, time, logging, httplib
 from django.utils import timezone
 from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, SiteCheckResult
 from bs4 import BeautifulSoup
+from bncom.views import EngineLog
 
 class www_ssllabs_com(threading.Thread):
     def __init__(self, sitecheckid):
@@ -30,16 +31,24 @@ class www_ssllabs_com(threading.Thread):
         ### make the check for results every 5 seconds
         while True:
             try:
+                uuid = str(uuid.uuid4())
+                ua = 'sslscout engine request %s (python-requests/2.2.1 CPython/2.7.6 FreeBSD/9.2-STABLE)' % uuid
+                headers = {
+                    'User-Agent': ua,
+                    'From': 'engine@sslscout.com'
+                }
+
                 ### make the request
                 if cachecleared:
-                    r = s.get(url)
+                    r = s.get(url,headers=headers)
                 else:
-                    r = s.get(clearurl)
+                    r = s.get(clearurl,headers=headers)
                     cachecleared = True
+                SaveRequest(request=r,sitecheck=sitecheck,uuid=uuid)
                 r.raise_for_status()
                 parsed_html = BeautifulSoup(r.text)
             except Exception as E:
-                print "exception getting and parsing html from %s: %s" % (url,E)
+                EngineLog(sitecheck,"exception getting and parsing html from %s: %s" % (url,E))
                 sitecheck.finish_time = timezone.now()
                 sitecheck.save()
                 break
@@ -76,11 +85,18 @@ class www_ssllabs_com(threading.Thread):
                         
                         ### get and parse the details page for this server
                         try:
-                            r = s.get(sitecheck.engine.checkurl + server.find('a')['href'].split('?')[1][2:])
+                            uuid = str(uuid.uuid4())
+                            ua = 'sslscout engine request %s (python-requests/2.2.1 CPython/2.7.6 FreeBSD/9.2-STABLE)' % uuid
+                            headers = {
+                                'User-Agent': ua,
+                                'From': 'engine@sslscout.com'
+                            }
+                            r = s.get(sitecheck.engine.checkurl + server.find('a')['href'].split('?')[1][2:],headers=headers)
+                            SaveRequest(request=r,sitecheck=sitecheck,uuid=uuid)
                             r.raise_for_status()
                             parsed_html = BeautifulSoup(r.text)
                         except Exception as E:
-                            print "exception getting and parsing html from %s: %s" % (url,E)
+                            EngineLog(sitecheck,"exception getting and parsing html from %s: %s" % (url,E))
                             sitecheck.finish_time = timezone.now()
                             sitecheck.save()
                             break

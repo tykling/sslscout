@@ -53,6 +53,25 @@ class SiteCheck(models.Model):
     finish_time = models.DateTimeField(null=True)
 
 
+### log output from sitechecks
+class SiteCheckLog(models.Model):
+    sitecheck = models.ForeignKey(SiteCheck)
+    datetime = models.DateTimeField(auto_now_add=True)
+    logentry = models.CharField(max_length=1000)
+
+
+### requestlog
+class RequestLog(models.Model):
+    sitecheck = models.ForeignKey(SiteCheck)
+    datetime = models.DateTimeField(auto_now_add=True)
+    uuid = UUIDField()
+    request_headers = models.TextField()
+    request_body = models.TextField()
+    response_code = models.IntegerField(null=true)
+    response_headers = models.TextField()
+    response_body = models.TextField()
+
+
 ### contains the results of a sitecheck, can contain multiple entries 
 ### per sitecheck if a hostname resolves to multiple IP addresses
 class SiteCheckResult(models.Model):

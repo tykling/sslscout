@@ -8,8 +8,27 @@ import datetime, hashlib, pytz, requests, uuid
 from time import gmtime, strftime
 from decimal import Decimal
 
-from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck
+from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, RequestLog, SiteCheckLog
 from sslscout.forms import ProfileForm, SiteGroupForm, DeleteSiteGroupForm, SiteForm, DeleteSiteForm
+
+### save all info from a request 
+def SaveRequest(request,sitecheck,uuid):
+    request_headers = ""
+    for key,value in r.request.headers.iteritems():
+        request_headers += "%s: %s\n" % (key,value)
+    
+    response_headers = ""
+    for key,value in r.headers.iteritems():
+        response_headers += "%s: %s\n" % (key,value)
+    
+    requestlog = RequestLog(sitecheck=sitecheck,request_headers=request_headers,request_body=r.content,response_code=r.status_code,response_headers=response_headers,response_body=r.content)
+    requestlog.save()
+
+
+### logging function for engines
+def EngineLog(sitecheck,logentry):
+    log = SiteCheckLog(sitecheck=sitecheck, logentry=logentry)
+    log.save()
 
 
 ### renders any static page
