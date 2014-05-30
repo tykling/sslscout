@@ -11,11 +11,11 @@ class www_ssllabs_com(threading.Thread):
 
     def run(self):
         ### initialize HTTP debug logging
-        logging.basicConfig()
-        logging.getLogger().setLevel(logging.DEBUG)
-        requests_log = logging.getLogger("requests.packages.urllib3")
-        requests_log.setLevel(logging.DEBUG)
-        requests_log.propagate = True
+        #logging.basicConfig()
+        #logging.getLogger().setLevel(logging.DEBUG)
+        #requests_log = logging.getLogger("requests.packages.urllib3")
+        #requests_log.setLevel(logging.DEBUG)
+        #requests_log.propagate = True
 
         ### get the sitecheck
         sitecheck = SiteCheck.objects.get(id=self.sitecheckid)
@@ -68,7 +68,7 @@ class www_ssllabs_com(threading.Thread):
                     result = SiteCheckResult(sitecheck=sitecheck)
                     
                     ### get the server IP
-                    result.ip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
+                    result.serverip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
                     
                     ### get the results
                     summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
@@ -101,7 +101,7 @@ class www_ssllabs_com(threading.Thread):
                             sitecheck.save()
                             break
 
-                        result.ip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
+                        result.serverip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
                         summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
                         result.overall_rating = summarydiv.find('div',attrs={'class': 'rating_g'}).text
                         result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)

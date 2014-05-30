@@ -74,6 +74,8 @@ class RequestLog(models.Model):
     response_code = models.IntegerField(null=True)
     response_headers = models.TextField(null=True)
     response_body = models.TextField(null=True)
+    def __unicode__(self):
+        return "%s - %s: %s" % (self.sitecheck.id, self.datetime, self.request_url)
 
 
 ### contains the results of a sitecheck, can contain multiple entries 
@@ -81,7 +83,6 @@ class RequestLog(models.Model):
 class SiteCheckResult(models.Model):
     sitecheck = models.ForeignKey(SiteCheck)
     serverip = models.GenericIPAddressField(unpack_ipv4=True)
-    debug_html = models.TextField(null=True)
     overall_rating = models.CharField(max_length=2,null=True)
     certificate_score = models.IntegerField(null=True)
     protocolsupport_score = models.IntegerField(null=True)
