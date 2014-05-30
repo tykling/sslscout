@@ -18,7 +18,6 @@ class SiteGroup(models.Model):
     name = models.CharField(max_length=50)
     interval_hours = models.PositiveIntegerField()
     alert = models.BooleanField()
-
     def __unicode__(self):
         if self.alert:
             return "%s (%sh,alerting)" % (self.name,self.interval_hours)
@@ -30,7 +29,6 @@ class SiteGroup(models.Model):
 class Site(models.Model):
     sitegroup = models.ForeignKey(SiteGroup)
     hostname = models.CharField(max_length=256)
-
     def __unicode__(self):
         return self.hostname
 
@@ -51,7 +49,6 @@ class SiteCheck(models.Model):
     engine = models.ForeignKey(CheckEngine)
     start_time = models.DateTimeField(auto_now_add=True)
     finish_time = models.DateTimeField(null=True)
-
     def __unicode__(self):
         return "%s - %s: %s" % (self.hostname, self.engine, self.start_time)
 
@@ -61,7 +58,6 @@ class SiteCheckLog(models.Model):
     sitecheck = models.ForeignKey(SiteCheck)
     datetime = models.DateTimeField(auto_now_add=True)
     logentry = models.CharField(max_length=1000)
-    
     def __unicode__(self):
         return "%s - %s: %s" % (self.sitecheck.id, self.datetime, self.logentry)
 
@@ -91,6 +87,8 @@ class SiteCheckResult(models.Model):
     protocolsupport_score = models.IntegerField(null=True)
     keyexchange_score = models.IntegerField(null=True)
     cipherstrength_score = models.IntegerField(null=True)
+    def __unicode__(self):
+        return "%s - %s: %s" % (self.sitecheck.hostname, self.sitecheck.finish_time, self.overall_rating)
 
 
 ### import signals from signals.py (for profile autocreation on user creation)

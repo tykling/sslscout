@@ -55,7 +55,7 @@ class www_ssllabs_com(threading.Thread):
                 sitecheck.finish_time = timezone.now()
                 sitecheck.save()
                 break
-                
+
             refresh = parsed_html.find('meta', attrs={'http-equiv': 'refresh'})
             if refresh:
                 #delay = int(refresh.get('content').split(";")[0])
@@ -111,8 +111,11 @@ class www_ssllabs_com(threading.Thread):
                         result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
                         result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
                         result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
-                        result.finish_time = timezone.now()
                         result.save()
+                
+                ### mark the sitecheck as finished
+                sitecheck.finish_time = timezone.now()
+                sitecheck.save()
                 break
 
         ### log a message
