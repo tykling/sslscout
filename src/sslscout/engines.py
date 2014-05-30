@@ -2,7 +2,7 @@ import threading, requests, time, logging, httplib, uuid
 from django.utils import timezone
 from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, SiteCheckResult
 from bs4 import BeautifulSoup
-from sslscout.views import EngineLog
+from sslscout.views import EngineLog, SaveRequest
 
 class www_ssllabs_com(threading.Thread):
     def __init__(self, sitecheckid):
@@ -68,7 +68,7 @@ class www_ssllabs_com(threading.Thread):
                     result = SiteCheckResult(sitecheck=sitecheck)
                     
                     ### get the server IP
-                    result.ip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text
+                    result.ip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
                     
                     ### get the results
                     summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent

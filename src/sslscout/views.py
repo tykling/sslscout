@@ -14,14 +14,14 @@ from sslscout.forms import ProfileForm, SiteGroupForm, DeleteSiteGroupForm, Site
 ### save all info from a request 
 def SaveRequest(request,sitecheck,uuid):
     request_headers = ""
-    for key,value in r.request.headers.iteritems():
+    for key,value in request.request.headers.iteritems():
         request_headers += "%s: %s\n" % (key,value)
     
     response_headers = ""
-    for key,value in r.headers.iteritems():
+    for key,value in request.headers.iteritems():
         response_headers += "%s: %s\n" % (key,value)
     
-    requestlog = RequestLog(sitecheck=sitecheck,request_headers=request_headers,request_body=r.content,response_code=r.status_code,response_headers=response_headers,response_body=r.content)
+    requestlog = RequestLog(sitecheck=sitecheck,request_headers=request_headers,request_body=request.request.content,response_code=request.status_code,response_headers=response_headers,response_body=request.content,uuid=uuid)
     requestlog.save()
 
 
