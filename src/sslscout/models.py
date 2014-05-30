@@ -80,7 +80,7 @@ class RequestLog(models.Model):
 ### contains the results of a sitecheck, can contain multiple entries 
 ### per sitecheck if a hostname resolves to multiple IP addresses
 class SiteCheckResult(models.Model):
-    sitecheck = models.ForeignKey(SiteCheck)
+    sitecheck = models.ForeignKey(SiteCheck,related_name='results')
     serverip = models.GenericIPAddressField(unpack_ipv4=True)
     overall_rating = models.CharField(max_length=2,null=True)
     certificate_score = models.IntegerField(null=True)

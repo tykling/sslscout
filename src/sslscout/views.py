@@ -8,7 +8,7 @@ import datetime, hashlib, pytz, requests, uuid
 from time import gmtime, strftime
 from decimal import Decimal
 
-from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, RequestLog, SiteCheckLog
+from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, RequestLog, SiteCheckLog, SiteCheckResult
 from sslscout.forms import ProfileForm, SiteGroupForm, DeleteSiteGroupForm, SiteForm, DeleteSiteForm
 
 ### save all info from a request 
@@ -203,9 +203,9 @@ def site_delete(request, siteid):
 def site_details(request, siteid):
     ### if this site doesn't exist or is not owned by this user, return 404
     site = get_object_or_404(Site, id=siteid, sitegroup__user=request.user)
-
+    checks = SiteCheck.objects.filter(hostname=site.hostname).order_by('-finish_time')
+    
     return render(request, 'site_details.html', {
         'site': site,
+        'checks': checks
     })
-
-
