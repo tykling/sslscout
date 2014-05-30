@@ -68,11 +68,12 @@ class RequestLog(models.Model):
     sitecheck = models.ForeignKey(SiteCheck)
     datetime = models.DateTimeField(auto_now_add=True)
     uuid = UUIDField()
+    request_url = models.CharField(max_length=1000)
     request_headers = models.TextField()
-    request_body = models.TextField()
+    request_body = models.TextField(null=True)
     response_code = models.IntegerField(null=True)
-    response_headers = models.TextField()
-    response_body = models.TextField()
+    response_headers = models.TextField(null=True)
+    response_body = models.TextField(null=True)
 
 
 ### contains the results of a sitecheck, can contain multiple entries 

@@ -16,12 +16,10 @@ def SaveRequest(request,sitecheck,uuid):
     request_headers = ""
     for key,value in request.request.headers.iteritems():
         request_headers += "%s: %s\n" % (key,value)
-    
     response_headers = ""
     for key,value in request.headers.iteritems():
         response_headers += "%s: %s\n" % (key,value)
-    
-    requestlog = RequestLog(sitecheck=sitecheck,request_headers=request_headers,request_body=request.request.content,response_code=request.status_code,response_headers=response_headers,response_body=request.content,uuid=uuid)
+    requestlog = RequestLog(sitecheck=sitecheck, request_url=request.url, request_headers=request_headers, response_code=request.status_code, response_headers=response_headers, response_body=request.content, uuid=uuid)
     requestlog.save()
 
 
@@ -32,8 +30,8 @@ def EngineLog(sitecheck,logentry):
 
 
 ### renders any static page
-def staticpage(request,page):
-    return render(request,page)
+def staticpage(request, page):
+    return render(request, page)
 
 
 ### show profile
