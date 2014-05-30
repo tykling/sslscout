@@ -19,6 +19,9 @@ class www_ssllabs_com(threading.Thread):
 
         ### get the sitecheck
         sitecheck = SiteCheck.objects.get(id=self.sitecheckid)
+        
+        ### log a message
+        EngineLog(sitecheck,"checking site %s" % sitecheck.hostname)
 
         ### put the URLs together
         clearurl = sitecheck.engine.cacheclearurl + sitecheck.hostname
@@ -112,9 +115,10 @@ class www_ssllabs_com(threading.Thread):
                         result.save()
                 break
 
-        ### thread finished
+        ### log a message
+        EngineLog(sitecheck,"finished checking site %s" % sitecheck.hostname)
 
-        
+
 class sslcheck_globalsign_com(threading.Thread):
     def __init__(self, sitecheckid):
         super(Worker, self).__init__()
