@@ -75,7 +75,12 @@ class www_ssllabs_com(threading.Thread):
                     
                     ### get the results
                     summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
-                    result.overall_rating = summarydiv.find('div',attrs={'class': 'rating_g'}).text
+
+                    if summarydiv.find('div',attrs={'class': 'rating_g'}):
+                        result.overall_rating = summarydiv.find('div',attrs={'class': 'rating_g'}).text
+                    else:
+                        result.overall_rating = summarydiv.find('div',attrs={'class': 'rating_r'}).text
+
                     result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
                     result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
                     result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
@@ -95,7 +100,7 @@ class www_ssllabs_com(threading.Thread):
                                 'From': 'engine@sslscout.com'
                             }
                             r = s.get(sitecheck.engine.checkurl + server.find('a')['href'].split('?')[1][2:],headers=headers)
-                            SaveRequest(request=r,sitecheck=sitecheck,uuid=uuid)
+                            SaveRequest(request=r,sitecheck=sitecheck,uuid=requestuuid)
                             r.raise_for_status()
                             parsed_html = BeautifulSoup(r.text)
                         except Exception as E:
