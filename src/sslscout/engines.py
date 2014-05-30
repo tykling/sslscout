@@ -75,8 +75,7 @@ class www_ssllabs_com(threading.Thread):
                     
                     ### get the results
                     summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
-
-                    result.overall_rating = find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
+                    result.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
                     result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
                     result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
                     result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
@@ -107,7 +106,7 @@ class www_ssllabs_com(threading.Thread):
 
                         result.serverip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
                         summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
-                        result.overall_rating = find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
+                        result.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
                         result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
                         result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
                         result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
