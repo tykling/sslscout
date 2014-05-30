@@ -35,7 +35,7 @@ class Command(BaseCommand):
         for engine in engines:
             print "############ Working on engine %s" % engine.name
             ### check if this engine already has a job running
-            if SiteCheck.objects.filter(finish_time=None,engine=engine).exclude(start_time=None).count() > 0:
+            if SiteCheck.objects.filter(finish_time=None,engine=engine).count() > 0:
                 ### skipping this engine
                 self.stdout.write('engine %s is already busy running a job' % engine.name)
                 continue
