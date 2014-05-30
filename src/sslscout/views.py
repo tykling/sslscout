@@ -3,13 +3,12 @@ from django.conf import settings
 from django.http import HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotAllowed, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django import forms
-
 import datetime, hashlib, pytz, requests, uuid
 from time import gmtime, strftime
 from decimal import Decimal
-
 from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, RequestLog, SiteCheckLog, SiteCheckResult
 from sslscout.forms import ProfileForm, SiteGroupForm, DeleteSiteGroupForm, SiteForm, DeleteSiteForm
+
 
 ### save all info from a request 
 def SaveRequest(request,sitecheck,uuid):
@@ -147,9 +146,13 @@ def site_list(request):
     mysites = Site.objects.filter(sitegroup__user=request.user)
     sites = []
     for site in mysites:
-        lastcheck = SiteCheck.objects.filter(hostname=site.hostname).latest('finish_time')
-        nextcheck = lastcheck.finish_time+timedelta(hours=site.sitegroup.interval_hours)
-        sites.append({'hostname': site.hostname, 'sitegroup': site.sitegroup.name, 'lastcheck': lastcheck, 'nextcheck': nextcheck})
+        if SiteCheck.objects.filter(hostname=site.hostname).count() > 0:
+            lastcheck = SiteCheck.objects.filter(hostname=site.hostname).latest('finish_time').finish_time
+            nextcheck = lastcheck+datetime.timedelta(hours=site.sitegroup.interval_hours)
+        else:
+            lastcheck = "n/a"
+            nextcheck = "n/a"
+        sites.append({'id': site.id, 'hostname': site.hostname, 'sitegroup': site.sitegroup.name, 'lastcheck': lastcheck, 'nextcheck': nextcheck})
 
     return render(request, 'site_list.html', {
         'sites': sites,
