@@ -144,7 +144,12 @@ def sitegroup_details(request,sitegroupid):
 @login_required
 def site_list(request):
     ### get a list of this users sites
-    sites = Site.objects.filter(sitegroup__user=request.user)
+    mysites = Site.objects.filter(sitegroup__user=request.user)
+    sites = []
+    for site in mysites:
+        lastcheck = SiteCheck.objects.filter(hostname=site.hostname).latest('finish_time')
+        nextcheck = lastcheck.finish_time+timedelta(hours=site.sitegroup.interval_hours)
+        sites.append({'hostname': site.hostname, 'sitegroup': site.sitegroup.name, 'lastcheck': lastcheck, 'nextcheck': nextcheck})
 
     return render(request, 'site_list.html', {
         'sites': sites,
