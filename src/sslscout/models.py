@@ -52,6 +52,9 @@ class SiteCheck(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     finish_time = models.DateTimeField(null=True)
 
+    def __unicode__(self):
+        return "%s - %s: %s" % (self.hostname, self.engine, self.start_time)
+
 
 ### log output from sitechecks
 class SiteCheckLog(models.Model):
