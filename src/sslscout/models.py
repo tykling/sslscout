@@ -58,6 +58,9 @@ class SiteCheckLog(models.Model):
     sitecheck = models.ForeignKey(SiteCheck)
     datetime = models.DateTimeField(auto_now_add=True)
     logentry = models.CharField(max_length=1000)
+    
+    def __unicode__(self):
+        return "%s - %s: %s" % (self.sitecheck.id, self.datetime, self.logentry)
 
 
 ### requestlog
@@ -67,7 +70,7 @@ class RequestLog(models.Model):
     uuid = UUIDField()
     request_headers = models.TextField()
     request_body = models.TextField()
-    response_code = models.IntegerField(null=true)
+    response_code = models.IntegerField(null=True)
     response_headers = models.TextField()
     response_body = models.TextField()
 

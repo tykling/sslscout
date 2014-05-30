@@ -1,8 +1,8 @@
-import threading, requests, time, logging, httplib
+import threading, requests, time, logging, httplib, uuid
 from django.utils import timezone
 from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, SiteCheckResult
 from bs4 import BeautifulSoup
-from bncom.views import EngineLog
+from sslscout.views import EngineLog
 
 class www_ssllabs_com(threading.Thread):
     def __init__(self, sitecheckid):
@@ -31,8 +31,8 @@ class www_ssllabs_com(threading.Thread):
         ### make the check for results every 5 seconds
         while True:
             try:
-                uuid = str(uuid.uuid4())
-                ua = 'sslscout engine request %s (python-requests/2.2.1 CPython/2.7.6 FreeBSD/9.2-STABLE)' % uuid
+                requestuuid = str(uuid.uuid4())
+                ua = 'sslscout engine request %s (python-requests/2.2.1 CPython/2.7.6 FreeBSD/9.2-STABLE)' % requestuuid
                 headers = {
                     'User-Agent': ua,
                     'From': 'engine@sslscout.com'
@@ -44,7 +44,7 @@ class www_ssllabs_com(threading.Thread):
                 else:
                     r = s.get(clearurl,headers=headers)
                     cachecleared = True
-                SaveRequest(request=r,sitecheck=sitecheck,uuid=uuid)
+                SaveRequest(request=r,sitecheck=sitecheck,uuid=requestuuid)
                 r.raise_for_status()
                 parsed_html = BeautifulSoup(r.text)
             except Exception as E:
@@ -85,8 +85,8 @@ class www_ssllabs_com(threading.Thread):
                         
                         ### get and parse the details page for this server
                         try:
-                            uuid = str(uuid.uuid4())
-                            ua = 'sslscout engine request %s (python-requests/2.2.1 CPython/2.7.6 FreeBSD/9.2-STABLE)' % uuid
+                            requestuuid = str(uuid.uuid4())
+                            ua = 'sslscout engine request %s (python-requests/2.2.1 CPython/2.7.6 FreeBSD/9.2-STABLE)' % requestuuid
                             headers = {
                                 'User-Agent': ua,
                                 'From': 'engine@sslscout.com'
