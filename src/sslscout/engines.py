@@ -64,7 +64,8 @@ class www_ssllabs_com(threading.Thread):
                 continue
             else:
                 ### no refresh tag found, this check is now finished, 
-                ### extract the result data from the html, first find out if this is a single or multiple servers
+                ### extract the result data from the html, 
+                ### but first find out if this is a single or multiple servers
                 multipletable = parsed_html.find('table', attrs={'id': 'multiTable'})
                 if not multipletable:
                     ### create the result object
@@ -73,14 +74,21 @@ class www_ssllabs_com(threading.Thread):
                     ### get the server IP
                     result.serverip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
                     
-                    ### get the results
-                    summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
-                    result.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
-                    result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
-                    result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
-                    result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
-                    result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
-                    result.finish_time = timezone.now()
+                    ### find out if an error occurred
+                    warningdiv = parsed_html.find('div', attrs={'id': 'warningBox'})
+                    if warningdiv:
+                        ### check failed, save the reason and abort
+                        result.error_string = warningdiv.text
+                    else:
+                        ### get the results
+                        summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
+                        result.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
+                        result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
+                        result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
+                        result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
+                        result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
+                        result.finish_time = timezone.now()
+                    ### save the result
                     result.save()
                 else:
                     for server in multipletable.find_all('span',attrs={'class': 'ip'}):
@@ -104,13 +112,23 @@ class www_ssllabs_com(threading.Thread):
                             sitecheck.save()
                             break
 
+                        ### find the server ip
                         result.serverip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
-                        summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
-                        result.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
-                        result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
-                        result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
-                        result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
-                        result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
+
+                        ### find out if an error occurred
+                        warningdiv = parsed_html.find('div', attrs={'id': 'warningBox'})
+                        if warningdiv:
+                            ### check failed, save the reason and abort
+                            result.error_string = warningdiv.text
+                        else:
+                            summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
+                            result.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
+                            result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
+                            result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
+                            result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
+                            result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
+                            
+                        ### save the result
                         result.save()
                 
                 ### mark the sitecheck as finished

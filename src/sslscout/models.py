@@ -87,6 +87,7 @@ class SiteCheckResult(models.Model):
     protocolsupport_score = models.IntegerField(null=True)
     keyexchange_score = models.IntegerField(null=True)
     cipherstrength_score = models.IntegerField(null=True)
+    error_string = models.TextField()
     def __unicode__(self):
         return "%s - %s: %s" % (self.sitecheck.hostname, self.sitecheck.finish_time, self.overall_rating)
 
