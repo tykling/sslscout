@@ -20,25 +20,16 @@
             <ul class="nav navbar-nav">
                 {% if user.is_authenticated %}
                 <li>
-                    <a href="/sites/"><i class="fa fa-list fa-lg"></i> Sites</a>
+                    <a href="/sites/"><i class="fa fa-list fa-lg"></i> {{ sitecount }} Sites</a>
                 </li>
                 <li>
-                    <a href="/sitegroups/"><i class="fa fa-list fa-lg"></i> Site Groups</a>
-                </li>
-                <li>
-                    <a href="/results/"><i class="fa fa-flag fa-lg"></i> Results</a>
+                    <a href="/sitegroups/"><i class="fa fa-list fa-lg"></i> {{ sitegroupcount }} Site Groups</a>
                 </li>
                 {% endif %}
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
-                <li>
-                    <a>Sites/Groups: <span class="badge">{{ sitecount }}/{{ sitegroupcount }}</span></a>
-                </li>
-                <li>
-                    <a>Global/User Queue:  <span class="badge">{{ queuelength }}/{{ userqueuelength }}</span></a>
-                </li>
                 <li>
                     <a href="/profile/"><i class="fa fa-user fa-lg"></i> {{ user }}</a>
                 </li>

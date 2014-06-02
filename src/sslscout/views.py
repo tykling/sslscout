@@ -131,8 +131,23 @@ def sitegroup_list(request):
 def sitegroup_details(request,sitegroupid):
     ### if this sitegroup doesn't exist or is not owned by this user, return 404
     sg = get_object_or_404(SiteGroup, id=sitegroupid, user=request.user)
-    sites = Site.objects.filter(sitegroup=sg)
-    
+    tempsites = Site.objects.filter(sitegroup=sg)
+    sites = []
+    for site in tempsites:
+        lastcheck = site.sitecheck_set.all().order_by('-finish_time')[0]
+        if lastcheck:
+            finish_time = lastcheck.finish_time
+            results = ""
+            for result in lastcheck.results.all():
+                if results = "":
+                    results = result.overall_rating
+                else:
+                    results += "/%s" % result.overall_rating
+        sites.append({
+            'hostname': site.hostname, 
+            'lastcheck': site.sitecheck_set.all().order_by('-finish_time')[0].finish_time, 
+            'results': results
+        })
     return render(request, 'sitegroup_details.html', {
         'sg': sg,
         'sites': sites
