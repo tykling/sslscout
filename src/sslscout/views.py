@@ -41,7 +41,7 @@ def frontpage(request):
                     'id': site.id,
                     'hostname': site.hostname, 
                     'checktime': finish_time, 
-                    'engine': lastcheck.engine,
+                    'engine': engine,
                     'results': results,
                 })
             sitegroups.append({
