@@ -94,7 +94,7 @@ class www_ssllabs_com(threading.Thread):
             if refresh:
                 #delay = int(refresh.get('content').split(";")[0])
                 #print "sleeping %s seconds, got meta-refresh tag: %s" % (delay,refresh)
-                time.sleep(20)
+                time.sleep(40)
                 continue
             else:
                 ### no refresh tag found, this check is now finished, 
@@ -104,7 +104,7 @@ class www_ssllabs_com(threading.Thread):
                 if not multipletable:
                     ### create the result object
                     result = SiteCheckResult(sitecheck=sitecheck)
-                    result = parseresults(result,parsed_html)
+                    result = self.parseresults(result,parsed_html)
                     result.save()
                 else:
                     for server in multipletable.find_all('span',attrs={'class': 'ip'}):                        
@@ -128,7 +128,7 @@ class www_ssllabs_com(threading.Thread):
 
                         ### parse and save the results
                         result = SiteCheckResult(sitecheck=sitecheck)
-                        result = parseresults(result,parsed_html)
+                        result = self.parseresults(result,parsed_html)
                         result.save()
                 
                 ### mark the sitecheck as finished
