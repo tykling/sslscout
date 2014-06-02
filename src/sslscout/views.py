@@ -23,15 +23,24 @@ def frontpage(request):
             ### loop through the sites in this group
             for site in sg.sites.all():
                 ### find the latest check for this hostname
-                lastcheck = SiteCheck.objects.filter(hostname=site.hostname).latest('finish_time')
-                results = []
-                ### loop through the results from the latest check for this hostname
-                for result in lastcheck.results.all():
-                    results.append(result.overall_rating)
+                try:
+                    lastcheck = SiteCheck.objects.filter(hostname=site.hostname).latest('finish_time')
+                    results = []
+                    ### loop through the results from the latest check for this hostname
+                    for result in lastcheck.results.all():
+                        results.append(result.overall_rating)
+                    finish_time = lastcheck.finish_time
+                    engine = lastcheck.engine
+                except SiteCheck.DoesNotExist:
+                    results = ['n/a']
+                    engine = "n/a"
+                    finish_time = "n/a"
+
+                ### add to the list of sites
                 sites.append({
                     'id': site.id,
                     'hostname': site.hostname, 
-                    'checktime': lastcheck.finish_time, 
+                    'checktime': finish_time, 
                     'engine': lastcheck.engine,
                     'results': results,
                 })
