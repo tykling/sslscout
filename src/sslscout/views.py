@@ -17,13 +17,13 @@ def frontpage(request):
         sitegroups = []
         ### loop through the sitegroups that belong to this user
         for sg in SiteGroup.objects.filter(user=request.user):
-            if sg.site__set.count == 0:
+            if sg.sites.count == 0:
                 continue
             sites = []
             ### loop through the sites in this group
-            for site in sg.site__set:
+            for site in sg.sites.all():
                 ### find the latest check for this hostname
-                lastcheck = SiteCheck.objects.filter(hostname=site.hostname).latest
+                lastcheck = SiteCheck.objects.filter(hostname=site.hostname).latest('finish_time')
                 results = []
                 ### loop through the results from the latest check for this hostname
                 for result in lastcheck.results.all():
@@ -36,11 +36,12 @@ def frontpage(request):
                     'results': results,
                 })
             sitegroups.append({
+                'id': sg.id,
                 'name': sg.name, 
                 'alerting': sg.alert,
                 'interval': sg.interval_hours,
                 'sites': sites,
-            )}
+            })
 
         return render(request,'dashboard.html', {
             'sitegroups': sitegroups,
@@ -177,12 +178,9 @@ def sitegroup_details(request,sitegroupid):
         lastcheck = site.sitecheck_set.all().order_by('-finish_time')[0]
         if lastcheck:
             finish_time = lastcheck.finish_time
-            results = ""
+            results = []
             for result in lastcheck.results.all():
-                if results = "":
-                    results = result.overall_rating
-                else:
-                    results += "/%s" % result.overall_rating
+                results.append(result.overall_rating)
         sites.append({
             'hostname': site.hostname, 
             'lastcheck': site.sitecheck_set.all().order_by('-finish_time')[0].finish_time, 

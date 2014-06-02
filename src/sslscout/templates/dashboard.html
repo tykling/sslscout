@@ -22,10 +22,8 @@
                             {% for sg in sitegroups %}
                                 {% for site in sg.sites %}
                                 <tr>
-                                    {% if forloop.counter0 == 0 %}
-                                        <td rowspan="{{sg.sites.count}}">sg.name</td>
-                                    {% endif %}
-                                    <td>{{ site.hostname }}</td>
+                                    <td><a href="/sitegroups/{{ sg.id }}/">{{ sg.name }}</a></td>                                    
+                                    <td><a href="/sites/{{ site.id }}/">{{ site.hostname }}</a></td>
                                     <td>{{ site.checktime }} ({{ site.engine.name }})</td>
                                     <td>{{ site.results|join:"/" }}</td>
                                     <td>

@@ -32,7 +32,7 @@
                             <tr>
                                 <td>{{ site.hostname }}</td>
                                 <td>{{ site.lastcheck }}</td>
-                                <td>{{ site.results }}</td>
+                                <td>{{ site.results|join:"/" }}</td>
                                 <td>{{ sg.interval_hours }} hours</td>
                                 <td>
                                     <a href="/sites/{{site.id}}/" class="btn btn-info">Details</a> 
