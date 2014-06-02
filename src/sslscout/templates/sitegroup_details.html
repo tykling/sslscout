@@ -7,12 +7,12 @@
                     {% block content %}
                     <h1>Group <b>{{ sg.name }}</b></h1>
                     <p>This group of sites is being checked every <b>{{ sg.interval_hours }} hours</b>. 
-                    Email alerting is <b>{% if sg.alert %}enabled{% else %}not enabled{% endif %}</b> for 
-                    this group. {% if sg.alert %}This means that you will receive an email whenever the 
+                    Email alerting is <b>{% if sg.alerting %}enabled{% else %}not enabled{% endif %}</b> for 
+                    this group. {% if sg.alerting %}This means that you will receive an email whenever the 
                     rating for a site in this group changes.{% else %}You will not receive email alerts 
                     for sites in this group.{% endif %}</p>
                     
-                    <p><a href="/sitegroups/add/" class="btn btn-primary">Add New Group</a></p>
+                    <p> <a href="/sitegroups/{{sg.id}}/addsite/" class="btn btn-primary">Add New Site</a></p>
                     <h1>Sites in Group</h1>
                     {% if not sg.sites %}
                         <p>No sites in this group. Go <a href="/sitegroups/{{sg.id}}/addsite/" class="btn btn-primary">add one</a></p>
@@ -31,9 +31,9 @@
                             {% for site in sg.sites %}
                             <tr>
                                 <td>{{ site.hostname }}</td>
-                                <td>{{ site.lastcheck }}</td>
+                                <td>{{ site.checktime }}</td>
                                 <td>{{ site.results|join:"/" }}</td>
-                                <td>{{ sg.interval_hours }} hours</td>
+                                <td>{{ sg.interval }} hours</td>
                                 <td>
                                     <a href="/sites/{{site.id}}/" class="btn btn-info">Details</a> 
                                     <a href="/sites/{{site.id}}/edit/" class="btn btn-default">Edit</a> 
