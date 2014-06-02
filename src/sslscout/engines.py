@@ -12,9 +12,6 @@ class www_ssllabs_com(threading.Thread):
 
     def parse_results(self,result,parsed_html):
         try:
-            ### get the server IP
-            result.serverip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
-            
             ### find out if an error occurred
             warningdiv = parsed_html.find('div', attrs={'id': 'warningBox'})
             errordiv = parsed_html.find('div', attrs={'class': 'submitError'})
@@ -25,6 +22,9 @@ class www_ssllabs_com(threading.Thread):
                 ### check failed, save the reason and abort
                 result.error_string = errordiv.text
             else:
+                ### get the server IP
+                result.serverip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
+
                 ### get the results
                 summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
                 result.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
