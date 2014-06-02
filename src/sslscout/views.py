@@ -213,7 +213,11 @@ def site_list(request):
     for site in mysites:
         if SiteCheck.objects.filter(hostname=site.hostname).count() > 0:
             lastcheck = SiteCheck.objects.filter(hostname=site.hostname).latest('finish_time').finish_time
-            nextcheck = lastcheck+datetime.timedelta(hours=site.sitegroup.interval_hours)
+            if lastcheck:
+                nextcheck = lastcheck+datetime.timedelta(hours=site.sitegroup.interval_hours)
+            else:
+                lastcheck = "n/a"
+                nextcheck = "n/a"
         else:
             lastcheck = "n/a"
             nextcheck = "n/a"
