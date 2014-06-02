@@ -6,7 +6,7 @@
                     
                     {% block content %}
                     <h1>Group <b>{{ sg.name }}</b></h1>
-                    <p>This group of sites is being checked every <b>{{ sg.interval_hours }} hours</b>. 
+                    <p>This group of sites is being checked every <b>{{ sg.interval }} hours</b>. 
                     Email alerting is <b>{% if sg.alerting %}enabled{% else %}not enabled{% endif %}</b> for 
                     this group. {% if sg.alerting %}This means that you will receive an email whenever the 
                     rating for a site in this group changes.{% else %}You will not receive email alerts 
