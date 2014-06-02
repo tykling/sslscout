@@ -22,9 +22,9 @@
                             <tr>
                                 <th>Hostname</th>
                                 <th>Last Check</th>
-                                <th>Last Result</th>
+                                <th style="text-align: center">Last Result</th>
                                 <th>Interval</th>
-                                <th>Actions</th>
+                                <th style="text-align: center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -32,9 +32,9 @@
                             <tr>
                                 <td>{{ site.hostname }}</td>
                                 <td>{{ site.checktime }}</td>
-                                <td>{{ site.results|join:"/" }}</td>
+                                <td style="text-align: center">{{ site.results|join:"/" }}</td>
                                 <td>{{ sg.interval }} hours</td>
-                                <td>
+                                <td style="text-align: center">
                                     <a href="/sites/{{site.id}}/" class="btn btn-info">Details</a> 
                                     <a href="/sites/{{site.id}}/edit/" class="btn btn-default">Edit</a> 
                                     <a href="/sites/{{site.id}}/delete/" class="btn btn-danger">Delete</a> 

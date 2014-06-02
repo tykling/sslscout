@@ -9,6 +9,37 @@ class www_ssllabs_com(threading.Thread):
         super(www_ssllabs_com, self).__init__()
         self.sitecheckid=sitecheckid
 
+
+    def parseresults(result,parsed_html):
+        try:
+            ### get the server IP
+            result.serverip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
+            
+            ### find out if an error occurred
+            warningdiv = parsed_html.find('div', attrs={'id': 'warningBox'})
+            errordiv = parsed_html.find('div', attrs={'class': 'submitError'})
+            if warningdiv:
+                ### check failed, save the reason and abort
+                result.error_string = warningdiv.text
+            elif errordiv:
+                ### check failed, save the reason and abort
+                result.error_string = errordiv.text
+            else:
+                ### get the results
+                summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
+                result.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
+                result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
+                result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
+                result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
+                result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
+                result.finish_time = timezone.now()
+        except Exception as E:
+            result.error_string = "exception in parseresults: %s" % E
+
+        ### return the result
+        return result
+
+
     def run(self):
         ### initialize HTTP debug logging
         #logging.basicConfig()
@@ -31,9 +62,11 @@ class www_ssllabs_com(threading.Thread):
         ### begin requests session
         s = requests.Session()
         
-        ### make the check for results every 5 seconds
+        ### main loop to send requests to check for results periodically
         while True:
             try:
+                ### generate a uuid for this request,
+                ### and put the headers dict together
                 requestuuid = str(uuid.uuid4())
                 ua = 'sslscout engine request %s (python-requests/2.2.1 CPython/2.7.6 FreeBSD/9.2-STABLE)' % requestuuid
                 headers = {
@@ -56,6 +89,7 @@ class www_ssllabs_com(threading.Thread):
                 sitecheck.save()
                 break
 
+            ### find out if the check is finished or not by checking for the refresh tag
             refresh = parsed_html.find('meta', attrs={'http-equiv': 'refresh'})
             if refresh:
                 #delay = int(refresh.get('content').split(";")[0])
@@ -70,30 +104,10 @@ class www_ssllabs_com(threading.Thread):
                 if not multipletable:
                     ### create the result object
                     result = SiteCheckResult(sitecheck=sitecheck)
-                    
-                    ### get the server IP
-                    result.serverip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
-                    
-                    ### find out if an error occurred
-                    warningdiv = parsed_html.find('div', attrs={'id': 'warningBox'})
-                    if warningdiv:
-                        ### check failed, save the reason and abort
-                        result.error_string = warningdiv.text
-                    else:
-                        ### get the results
-                        summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
-                        result.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
-                        result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
-                        result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
-                        result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
-                        result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
-                        result.finish_time = timezone.now()
-                    ### save the result
+                    result = parseresults(result,parsed_html)
                     result.save()
                 else:
-                    for server in multipletable.find_all('span',attrs={'class': 'ip'}):
-                        result = SiteCheckResult(sitecheck=sitecheck)
-                        
+                    for server in multipletable.find_all('span',attrs={'class': 'ip'}):                        
                         ### get and parse the details page for this server
                         try:
                             requestuuid = str(uuid.uuid4())
@@ -112,23 +126,9 @@ class www_ssllabs_com(threading.Thread):
                             sitecheck.save()
                             break
 
-                        ### find the server ip
-                        result.serverip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
-
-                        ### find out if an error occurred
-                        warningdiv = parsed_html.find('div', attrs={'id': 'warningBox'})
-                        if warningdiv:
-                            ### check failed, save the reason and abort
-                            result.error_string = warningdiv.text
-                        else:
-                            summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
-                            result.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
-                            result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
-                            result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
-                            result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
-                            result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
-                            
-                        ### save the result
+                        ### parse and save the results
+                        result = SiteCheckResult(sitecheck=sitecheck)
+                        result = parseresults(result,parsed_html)
                         result.save()
                 
                 ### mark the sitecheck as finished
