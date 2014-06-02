@@ -27,7 +27,7 @@ class SiteGroup(models.Model):
 
 ### contains all site definitions    
 class Site(models.Model):
-    sitegroup = models.ForeignKey(SiteGroup)
+    sitegroup = models.ForeignKey(SiteGroup,related_name="sites")
     hostname = models.CharField(max_length=256)
     def __unicode__(self):
         return self.hostname
@@ -51,11 +51,13 @@ class SiteCheck(models.Model):
     finish_time = models.DateTimeField(null=True)
     def __unicode__(self):
         return "%s - %s: %s" % (self.hostname, self.engine, self.start_time)
+    class Meta:
+        ordering = ['-finish_time']
 
-
+        
 ### log output from sitechecks
 class SiteCheckLog(models.Model):
-    sitecheck = models.ForeignKey(SiteCheck)
+    sitecheck = models.ForeignKey(SiteCheck,related_name="checklogs")
     datetime = models.DateTimeField(auto_now_add=True)
     logentry = models.CharField(max_length=1000)
     def __unicode__(self):
@@ -64,7 +66,7 @@ class SiteCheckLog(models.Model):
 
 ### requestlog
 class RequestLog(models.Model):
-    sitecheck = models.ForeignKey(SiteCheck)
+    sitecheck = models.ForeignKey(SiteCheck,related_name="requestlogs")
     datetime = models.DateTimeField(auto_now_add=True)
     uuid = UUIDField()
     request_url = models.CharField(max_length=1000)
@@ -75,6 +77,8 @@ class RequestLog(models.Model):
     response_body = models.TextField(null=True)
     def __unicode__(self):
         return "%s - %s: %s" % (self.sitecheck.id, self.datetime, self.request_url)
+    class Meta:
+        ordering = ['-datetime']
 
 
 ### contains the results of a sitecheck, can contain multiple entries 

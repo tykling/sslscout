@@ -14,8 +14,8 @@ urlpatterns = patterns('',
     ### admin site
     url(r'^admin/', include(admin.site.urls)),
 
-    ### static pages
-    url(r'^$', 'sslscout.views.staticpage',{'page': 'frontpage.html'}),
+    ### frontpage
+    url(r'^$', 'sslscout.views.frontpage'),
 
     ### auth and pw stuff
     url(r'^accounts/login/$', login, name='login'),

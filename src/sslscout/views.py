@@ -10,6 +10,46 @@ from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, Re
 from sslscout.forms import ProfileForm, SiteGroupForm, DeleteSiteGroupForm, SiteForm, DeleteSiteForm
 
 
+### frontpage / dashboard
+def frontpage(request):
+    if request.user.is_authenticated():    
+        ### get data to show on dashboard
+        sitegroups = []
+        ### loop through the sitegroups that belong to this user
+        for sg in SiteGroup.objects.filter(user=request.user):
+            if sg.site__set.count == 0:
+                continue
+            sites = []
+            ### loop through the sites in this group
+            for site in sg.site__set:
+                ### find the latest check for this hostname
+                lastcheck = SiteCheck.objects.filter(hostname=site.hostname).latest
+                results = []
+                ### loop through the results from the latest check for this hostname
+                for result in lastcheck.results.all():
+                    results.append(result.overall_rating)
+                sites.append({
+                    'id': site.id,
+                    'hostname': site.hostname, 
+                    'checktime': lastcheck.finish_time, 
+                    'engine': lastcheck.engine,
+                    'results': results,
+                })
+            sitegroups.append({
+                'name': sg.name, 
+                'alerting': sg.alert,
+                'interval': sg.interval_hours,
+                'sites': sites,
+            )}
+
+        return render(request,'dashboard.html', {
+            'sitegroups': sitegroups,
+        })
+    else:
+        ### show frontpage
+        return render(request,'frontpage.html')
+
+
 ### save all info from a request 
 def SaveRequest(request,sitecheck,uuid):
     request_headers = ""
