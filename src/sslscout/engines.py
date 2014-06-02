@@ -10,7 +10,7 @@ class www_ssllabs_com(threading.Thread):
         self.sitecheckid=sitecheckid
 
 
-    def parseresults(result,parsed_html):
+    def parse_results(self,result,parsed_html):
         try:
             ### get the server IP
             result.serverip = parsed_html.find('div', attrs={'class': 'reportTitle'}).find('span',attrs={'class': 'ip'}).text.strip()[1:-1]
@@ -34,7 +34,7 @@ class www_ssllabs_com(threading.Thread):
                 result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
                 result.finish_time = timezone.now()
         except Exception as E:
-            result.error_string = "exception in parseresults: %s" % E
+            result.error_string = "exception in parse_results: %s" % E
 
         ### return the result
         return result
@@ -104,7 +104,7 @@ class www_ssllabs_com(threading.Thread):
                 if not multipletable:
                     ### create the result object
                     result = SiteCheckResult(sitecheck=sitecheck)
-                    result = self.parseresults(result,parsed_html)
+                    self.parse_results(result,parsed_html)
                     result.save()
                 else:
                     for server in multipletable.find_all('span',attrs={'class': 'ip'}):                        
@@ -128,7 +128,7 @@ class www_ssllabs_com(threading.Thread):
 
                         ### parse and save the results
                         result = SiteCheckResult(sitecheck=sitecheck)
-                        result = self.parseresults(result,parsed_html)
+                        self.parse_results(result,parsed_html)
                         result.save()
                 
                 ### mark the sitecheck as finished
