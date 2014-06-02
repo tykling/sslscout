@@ -10,7 +10,16 @@ body {
     margin: 0 auto -40px;
     }
 #footer {
+	font-size: 12px;
     background-color: #4E5D6C;
+	color: #DF691A;
+	}
+#footer a {
+	color: #EBEBEB;
+	}
+#footer p {
+	margin: 0;
+	padding-top: 10px;
 	}
 #push,
 #footer {
