@@ -197,7 +197,7 @@ def sitegroup_details(request,sitegroupid):
         except SiteCheck.DoesNotExist:
             finish_time = "n/a"
             engine = "n/a"
-            results = "n/a"
+            results = ["n/a"]
         sites.append({
             'id': site.id,
             'hostname': site.hostname, 
