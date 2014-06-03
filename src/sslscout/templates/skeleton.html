@@ -20,10 +20,10 @@
             <ul class="nav navbar-nav">
                 {% if user.is_authenticated %}
                 <li>
-                    <a href="/sites/"><i class="fa fa-list fa-lg"></i> {{ sitecount }} Sites</a>
+                    <a href="/sitegroups/"><i class="fa fa-list fa-lg"></i> {{ sitegroupcount }} Groups</a>
                 </li>
                 <li>
-                    <a href="/sitegroups/"><i class="fa fa-list fa-lg"></i> {{ sitegroupcount }} Site Groups</a>
+                    <a href="/sites/"><i class="fa fa-list fa-lg"></i> {{ sitecount }} Sites</a>
                 </li>
                 {% endif %}
             </ul>
