@@ -186,16 +186,23 @@ def sitegroup_details(request,sitegroupid):
     ### loop through the sites in this group
     for site in sg.sites.all():
         ### find the latest check for this hostname
-        lastcheck = SiteCheck.objects.filter(hostname=site.hostname).latest('finish_time')
-        results = []
-        ### loop through the results from the latest check for this hostname
-        for result in lastcheck.results.all():
-            results.append(result.overall_rating)
+        try:
+            lastcheck = SiteCheck.objects.filter(hostname=site.hostname).latest('finish_time')
+            results = []
+            ### loop through the results from the latest check for this hostname
+            for result in lastcheck.results.all():
+                results.append(result.overall_rating)
+            finish_time = lastcheck.finish_time
+            engine = lastcheck.engine
+        except SiteCheck.DoesNotExist:
+            finish_time = "n/a"
+            engine = "n/a"
+            results = "n/a"
         sites.append({
             'id': site.id,
             'hostname': site.hostname, 
-            'checktime': lastcheck.finish_time, 
-            'engine': lastcheck.engine,
+            'checktime': finish_time, 
+            'engine': engine,
             'results': results,
         })
 
