@@ -23,7 +23,7 @@
                         <tbody>
                             {% for site in sites %}
                             <tr>
-                                <td>{{ site.hostname }}</td>
+                                <td><a href="https://{{ site.hostname }}">{{ site.hostname }}</a></td>
                                 <td>{{ site.sitegroup }}</td>
                                 <td>{{ site.lastcheck }}</td>
                                 <td>{{ site.nextcheck }}</td>
