@@ -249,7 +249,9 @@ def site_list(request):
 def site_add_edit(request,siteid=None,sitegroupid=None):
     if sitegroupid:
         sg = get_object_or_404(SiteGroup, id=sitegroupid, user=request.user)
-        
+
+    sitegroups = SiteGroup.objects.filter(user=request.user)
+    
     if siteid:
         site = get_object_or_404(Site, id=siteid, sitegroup__user=request.user)
         form = SiteForm(request.POST or None, instance=site)
@@ -265,7 +267,8 @@ def site_add_edit(request,siteid=None,sitegroupid=None):
     form.fields["sitegroup"].queryset = SiteGroup.objects.filter(user=request.user)
     form.fields["sitegroup"].widget.attrs['class'] = 'form-control'
     return render(request, template, {
-        'form': form
+        'form': form,
+        'sitegroups': sitegroups,
     })
 
 

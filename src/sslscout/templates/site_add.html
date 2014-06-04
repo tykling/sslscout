@@ -9,28 +9,31 @@
                         <form method="post" class="form-horizontal">
                             <fieldset>
                                 <legend>Add New Site</legend>
-
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <label for="id_name" class="col-lg-2 control-label">Hostname:</label> {% if form.hostname.errors %} <span class="error">{{ form.hostname.errors|join:", " }}</span>{% endif %}
-                                    <div class="col-lg-10">
-                                        <input value="{{ form.hostname.value|default_if_none:""  }}" type="text" name="hostname" class="form-control" id="id_hostname" placeholder="Hostname (ie. www.example.com)">
+                                {% if not sitegroups %}
+                                    <p>No Groups defined. Go <a href="/sitegroups/add/">add one</a>!</p>
+                                {% else %}
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="id_name" class="col-lg-2 control-label">Hostname:</label> {% if form.hostname.errors %} <span class="error">{{ form.hostname.errors|join:", " }}</span>{% endif %}
+                                        <div class="col-lg-10">
+                                            <input value="{{ form.hostname.value|default_if_none:""  }}" type="text" name="hostname" class="form-control" id="id_hostname" placeholder="Hostname (ie. www.example.com)">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="id_sitegroup" class="col-lg-2 control-label">Site Group:</label> {% if form.sitegroup.errors %} <span class="error">{{ form.sitegroup.errors|join:", " }}</span>{% endif %}
-                                    <div class="col-lg-10">
-                                        {{ form.sitegroup }}
+                                    <div class="form-group">
+                                        <label for="id_sitegroup" class="col-lg-2 control-label">Site Group:</label> {% if form.sitegroup.errors %} <span class="error">{{ form.sitegroup.errors|join:", " }}</span>{% endif %}
+                                        <div class="col-lg-10">
+                                            {{ form.sitegroup }}
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <div class="col-lg-10 col-lg-offset-2">
-                                        <a href="/sites/" class="btn btn-default">Cancel</a>
-                                        <button type="submit" class="btn btn-primary">Add Site</button>
+                                    <div class="form-group">
+                                        <div class="col-lg-10 col-lg-offset-2">
+                                            <a href="/sites/" class="btn btn-default">Cancel</a>
+                                            <button type="submit" class="btn btn-primary">Add Site</button>
+                                        </div>
                                     </div>
-                                </div>
+                                {% endif %}
                             </fieldset>
                         </form>
                     </div>
