@@ -41,6 +41,8 @@ class CheckEngine(models.Model):
     cacheclearurl = models.CharField(max_length=200)
     engineclass = models.CharField(max_length=50)
     active = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.name
 
 
 ### contains the running and finished checks of hostnames
