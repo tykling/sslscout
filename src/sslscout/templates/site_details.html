@@ -18,11 +18,13 @@
                             <tr>
                                 <th>Server</th>
                                 <th>When</th>
+                                <th>Engine</th>
                                 <th>Overall</th>
                                 <th>Certificate</th>
                                 <th>Protocol</th>
                                 <th>Key Exchange</th>
                                 <th>Cipher Strength</th>
+                                <th>Error Message</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -31,11 +33,13 @@
                                 <tr>
                                     <td>{{ check.hostname }} ({{ result.serverip }})</td>
                                     <td>{{ check.finish_time }}</td>
+                                    <td>{{ check.engine }}</td>
                                     <td>{{ result.overall_rating }}</td>
                                     <td>{{ result.certificate_score }}</td>
                                     <td>{{ result.protocolsupport_score }}</td>
                                     <td>{{ result.keyexchange_score }}</td>
                                     <td>{{ result.cipherstrength_score }}</td>
+                                    <td>{{ result.error_string }}</td>
                                 </tr>
                                 {% endfor %}
                             {% endfor %}

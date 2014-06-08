@@ -28,7 +28,10 @@ def frontpage(request):
                     results = []
                     ### loop through the results from the latest check for this hostname
                     for result in lastcheck.results.all():
-                        results.append(result.overall_rating)
+                        if result.error_string:
+                            results.append(error)
+                        else:
+                            results.append(result.overall_rating)
                     finish_time = lastcheck.finish_time
                     engine = lastcheck.engine
                 except SiteCheck.DoesNotExist:
@@ -191,7 +194,10 @@ def sitegroup_details(request,sitegroupid):
             results = []
             ### loop through the results from the latest check for this hostname
             for result in lastcheck.results.all():
-                results.append(result.overall_rating)
+                if result.error_string:
+                    results.append("error")
+                else:
+                    results.append(result.overall_rating)
             finish_time = lastcheck.finish_time
             engine = lastcheck.engine
         except SiteCheck.DoesNotExist:
