@@ -29,7 +29,7 @@ def frontpage(request):
                     ### loop through the results from the latest check for this hostname
                     for result in lastcheck.results.all():
                         if result.error_string:
-                            results.append(error)
+                            results.append("error")
                         else:
                             results.append(result.overall_rating)
                     finish_time = lastcheck.finish_time
@@ -243,7 +243,14 @@ def site_list(request):
         else:
             lastcheck = "n/a"
             nextcheck = "n/a"
-        sites.append({'id': site.id, 'hostname': site.hostname, 'sitegroup': site.sitegroup.name, 'lastcheck': lastcheck, 'nextcheck': nextcheck})
+        sites.append({
+            'id': site.id, 
+            'hostname': site.hostname, 
+            'sitegroup': site.sitegroup.name, 
+            'sitegroupid': site.sitegroup.id,
+            'lastcheck': lastcheck, 
+            'nextcheck': nextcheck
+        })
 
     return render(request, 'site_list.html', {
         'sites': sites,
@@ -311,3 +318,6 @@ def site_details(request, siteid):
         'site': site,
         'checks': checks
     })
+
+
+
