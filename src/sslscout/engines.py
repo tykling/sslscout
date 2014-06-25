@@ -3,6 +3,7 @@ from django.utils import timezone
 from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, SiteCheckResult
 from bs4 import BeautifulSoup
 from sslscout.views import EngineLog, SaveRequest
+from sslscout.emails import ResultEmail
 
 class www_ssllabs_com(threading.Thread):
     def __init__(self, sitecheckid):
@@ -27,15 +28,28 @@ class www_ssllabs_com(threading.Thread):
 
                 ### get the results
                 summarydiv = parsed_html.find_all('div', attrs={'class': 'sectionTitle'},text='Summary')[0].parent
-                result.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text
-                result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text)
-                result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text)
-                result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text)
-                result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text)
+                result.overall_rating = summarydiv.find('div',attrs={'class': 'ratingTitle'}).findNextSiblings('div')[0].text.strip()
+                result.certificate_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Certificate').parent.find('div',attrs={'class': 'chartValue'}).text.strip())
+                result.protocolsupport_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Protocol Support').parent.find('div',attrs={'class': 'chartValue'}).text.strip())
+                result.keyexchange_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Key Exchange').parent.find('div',attrs={'class': 'chartValue'}).text.strip())
+                result.cipherstrength_score = int(summarydiv.find('div',attrs={'class': 'chartLabel'},text='Cipher Strength').parent.find('div',attrs={'class': 'chartValue'}).text.strip())
                 result.finish_time = timezone.now()
         except Exception as E:
             result.error_string = "exception in parse_results: %s" % E
+        
+        ### validate data
+        try:
+            result.full_clean()
+        except Exception as E:
+            ### unset usersupplied data except the IP
+            result.error_string = "exception in parse_results: %s" % E
+            result.overall_rating = None
+            result.certificate_score = None
+            result.protocolsupport_score = None
+            result.keyexchange_score = None
+            result.cipherstrength_score = None
 
+        
         ### return the result
         return result
 
@@ -128,7 +142,6 @@ class www_ssllabs_com(threading.Thread):
 
                         ### parse and save the results
                         result = SiteCheckResult(sitecheck=sitecheck)
-                        self.parse_results(result,parsed_html)
                         result.save()
                 
                 ### mark the sitecheck as finished
@@ -138,6 +151,15 @@ class www_ssllabs_com(threading.Thread):
 
         ### log a message
         EngineLog(sitecheck,"finished checking site %s" % sitecheck.hostname)
+        
+        ### check if the result needs to be emailed to the user
+        if result_changed(sitecheck):
+            # send email
+            formatdict = {
+                'hostname': None
+            
+            }
+
 
 
 class sslcheck_globalsign_com(threading.Thread):
