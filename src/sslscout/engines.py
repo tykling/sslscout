@@ -42,7 +42,7 @@ class www_ssllabs_com(threading.Thread):
             result.full_clean()
         except Exception as E:
             ### unset usersupplied data except the IP
-            result.error_string = "exception in parse_results: %s" % E
+            result.error_string = "exception validating results: %s" % e.message_dict
             result.overall_rating = None
             result.certificate_score = None
             result.protocolsupport_score = None
@@ -153,12 +153,12 @@ class www_ssllabs_com(threading.Thread):
         EngineLog(sitecheck,"finished checking site %s" % sitecheck.hostname)
         
         ### check if the result needs to be emailed to the user
-        if result_changed(sitecheck):
+        #if result_changed(sitecheck):
             # send email
-            formatdict = {
-                'hostname': None
-            
-            }
+            #formatdict = {
+            #    'hostname': None
+            #
+            #}
 
 
 
