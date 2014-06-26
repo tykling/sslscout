@@ -3,7 +3,7 @@ from django.utils import timezone
 from sslscout.models import Profile, SiteGroup, Site, CheckEngine, SiteCheck, SiteCheckResult
 from bs4 import BeautifulSoup
 from sslscout.views import EngineLog, SaveRequest
-from sslscout.emails import ResultEmail
+#from sslscout.emails import ResultEmail
 
 class www_ssllabs_com(threading.Thread):
     def __init__(self, sitecheckid):
@@ -42,7 +42,7 @@ class www_ssllabs_com(threading.Thread):
             result.full_clean()
         except Exception as E:
             ### unset usersupplied data except the IP
-            result.error_string = "exception validating results: %s" % e.message_dict
+            result.error_string = "exception validating results: %s" % E.message_dict
             result.overall_rating = None
             result.certificate_score = None
             result.protocolsupport_score = None

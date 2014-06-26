@@ -87,13 +87,13 @@ class RequestLog(models.Model):
 ### per sitecheck if a hostname resolves to multiple IP addresses
 class SiteCheckResult(models.Model):
     sitecheck = models.ForeignKey(SiteCheck,related_name='results')
-    serverip = models.GenericIPAddressField(unpack_ipv4=True,null=True)
-    overall_rating = models.CharField(max_length=2,null=True)
-    certificate_score = models.IntegerField(null=True)
-    protocolsupport_score = models.IntegerField(null=True)
-    keyexchange_score = models.IntegerField(null=True)
-    cipherstrength_score = models.IntegerField(null=True)
-    error_string = models.TextField()
+    serverip = models.GenericIPAddressField(unpack_ipv4=True,null=True,blank=True)
+    overall_rating = models.CharField(max_length=2,null=True,blank=True)
+    certificate_score = models.IntegerField(null=True,blank=True)
+    protocolsupport_score = models.IntegerField(null=True,blank=True)
+    keyexchange_score = models.IntegerField(null=True,blank=True)
+    cipherstrength_score = models.IntegerField(null=True,blank=True)
+    error_string = models.TextField(null=True,blank=True)
     def __unicode__(self):
         return "%s - %s: %s" % (self.sitecheck.hostname, self.sitecheck.finish_time, self.overall_rating)
 
